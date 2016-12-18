@@ -1,0 +1,162 @@
+#include "player.h"
+#include <iostream>
+
+using namespace std;
+
+//-------------------------------------------------------------------
+// Write your own makeMove function.
+//-------------------------------------------------------------------
+
+void TPlayer::makeMove() {
+	map->MapNextTime(); // next population state
+
+	cout << "time: " << inputData.header.time << " money: " << inputData.header.money << endl;
+	//<< " total pop:" << map->totalPop
+	myTime++;
+	outputData.invest = 0;
+	outputData.numOrders = 0;
+
+	if (licit_keres) {
+		max = 0;										//A legjobb (nem saját) torony keresése
+		for (int i = 0; i < L; ++i)
+			if (inputData.towerInf[i].cust > inputData.towerInf[max].cust && inputData.towerInf[i].owner != ID)
+				max = i;
+	}
+
+	if (scriptName.size() > 0) {						//Ha megvan adva data\*.txt file, akkor beolvassa
+		outputData.invest = IScript[myTime];
+		outputData.numOrders = 0;
+		while ((OMut <= OMax) && (myTime >= Times[OMut])) {
+			if (myTime == Times[OMut]) {
+				outputData.orders[outputData.numOrders].towerID = OScript[OMut].towerID;
+				outputData.orders[outputData.numOrders].rentingCost = OScript[OMut].rentingCost;
+				outputData.orders[outputData.numOrders].distance = OScript[OMut].distance;
+				outputData.orders[outputData.numOrders].offer = OScript[OMut].offer;
+				outputData.orders[outputData.numOrders].leave = OScript[OMut].leave;
+				outputData.numOrders++;
+			}
+			OMut++;
+		}
+	}
+	else {
+		if (inputData.header.time == 0) {
+			int l = 0,g=0;
+			bool fog = true;
+			while (l < L && t<10) {
+				if (isnan(outputData.orders[legjobb_tornyok_ID[l]].rentingCost) == 0) {
+					fog = true;
+					g = 0;
+					while (g < t) {
+						if (!foglal(tornyok[g], legjobb_tornyok_ID[l])) {
+							fog = false; break;
+						}
+						++g;
+					}
+					if (fog) {
+						rentTower(legjobb_tornyok_ID[l], (float)headerIni.rentingMin, 35, 99);
+						tornyok[t++] = legjobb_tornyok_ID[l];
+						inputData.towerInf[legjobb_tornyok_ID[l]].owner = ID;
+					}
+				}
+				++l;
+			}
+
+			licit_keres=true;
+		}
+		else if (inputData.header.time == 1) {			//Top 1 torony licitálása
+			rentTower(max, inputData.towerInf[max].rentingCost + 1, 35, 99);
+			licit_keres = false;
+		}
+		else if (inputData.header.time == 5) {		//Ellenörzés, hogy megnyertük-e a top 1 tornyot
+			if (inputData.towerInf[max].distance == 3) {
+				changeDistanceAndOffer(max, 35, 99);
+				inputData.towerInf[max].owner = ID;
+				tornyok[t++] = max;
+			}
+		}
+		else if (inputData.header.time % 20 == 0 && inputData.header.money > 3000) {//Ellenfelek jó tornyainak licitálása
+			moneyy = (double)inputData.header.money;
+			for (int i = 0; i < inputData.header.numTowers; ++i) {
+				if (inputData.towerInf[i].owner != ID && moneyy > 3000 && (inputData.towerInf[i].cust * inputData.towerInf[i].offer / (float)1000000) > (inputData.towerInf[i].rentingCost + 2 + (float)inputData.towerInf[i].distance)) {
+					rentTower(i, inputData.towerInf[i].rentingCost + 5, 35, 99);
+					moneyy = moneyy-(double)((inputData.towerInf[i].rentingCost+5)*3);
+					celpontok[cel++] = i;
+				}
+			}
+		}
+		else if (inputData.header.time % 20 == 4 && inputData.header.money > 2800) {//Ellenörzés, hogy megnyertük-e őket
+			for (int i = 0; i < cel; ++i) {
+				if (inputData.header.money > 1800 && inputData.towerInf[celpontok[i]].distance == 3) {
+					changeDistanceAndOffer(celpontok[i], 35, 99);
+					inputData.towerInf[celpontok[i]].owner = ID;
+					tornyok[t++] = celpontok[i];
+				}
+			}
+		}
+	}
+	//Körönként 50-et teszek fejlesztésre ha lehet
+	if (inputData.header.money>50 && inputData.header.time > 1 && inputData.header.time < 357 && inputData.towerInf[tornyok[0]].techLevel < headerIni.techLevelMax)
+		outputData.invest = 50;
+
+	for (int i = 0; i < t; ++i) {					//Licit Védelem
+		if (inputData.towerInf[tornyok[i]].licit != 0) {
+			if ((inputData.towerInf[tornyok[i]].cust * inputData.towerInf[tornyok[i]].offer / (float)1000000) >(inputData.towerInf[tornyok[i]].licit + (float)inputData.towerInf[tornyok[i]].distance)) {
+				rentTower(tornyok[i], inputData.towerInf[tornyok[i]].licit, inputData.towerInf[tornyok[i]].distance, inputData.towerInf[tornyok[i]].offer);
+				inputData.towerInf[tornyok[i]].licit = 0;
+			}
+			else {
+				tornyok[i] = -1;
+				figyelmeztetesek[i] = -2;
+				inputData.towerInf[tornyok[i]].owner = 5;
+				inputData.towerInf[tornyok[i]].licit = 0;
+			}
+		}
+	}
+	torony = 0;
+	for (int i = 0; i < t; ++i) {
+		if (inputData.towerInf[tornyok[i]].owner == ID)
+			++torony;
+	}
+	if (inputData.header.time > 6) {				//Csőd védelem + Hatókör növelés
+		for (int i = 0; i < t; ++i) {
+			if (tornyok[i] != -1 && torony>2) {
+				if ((inputData.towerInf[tornyok[i]].cust * inputData.towerInf[tornyok[i]].offer / (float)1000000) < (inputData.towerInf[tornyok[i]].rentingCost + (float)inputData.towerInf[tornyok[i]].distance)) {
+					++figyelmeztetesek[i];
+				}
+				else {
+					figyelmeztetesek[i] = 0;
+					if (inputData.header.money > 150)
+						changeDistanceAndOffer(tornyok[i], inputData.towerInf[tornyok[i]].distance + 1, inputData.towerInf[tornyok[i]].offer);
+				}
+				if (figyelmeztetesek[i] > 3 && figyelmeztetesek[i] > -1) {
+					figyelmeztetesek[i] -= 3;
+					changeDistanceAndOffer(tornyok[i], inputData.towerInf[tornyok[i]].distance - 9, inputData.towerInf[tornyok[i]].offer);
+				}
+				if (inputData.towerInf[tornyok[i]].distance < 16) {
+					leaveTower(tornyok[i]);
+					tornyok[i] = -1;
+					figyelmeztetesek[i] = -2;
+					inputData.towerInf[tornyok[i]].owner = 5;
+				}
+			}
+		}
+	}
+	if (inputData.header.time > 0) {
+		//minőség = pénz
+		if (inputData.towerInf[tornyok[0]].techLevel > tech) {
+			tech = inputData.towerInf[tornyok[0]].techLevel;
+			for (short i = 0; i < t; ++i) {
+				changeDistanceAndOffer(tornyok[i], inputData.towerInf[tornyok[i]].distance, inputData.towerInf[tornyok[i]].offer + 5);
+			}
+		}
+		if (torony < 3 && inputData.header.money < 52) {
+			for (int i = 0; i < t; ++i) {
+				leaveTower(tornyok[i]);
+				tornyok[i] = -1;
+				figyelmeztetesek[i] = -2;
+				inputData.towerInf[tornyok[i]].owner = 5;
+			}
+		}
+	}
+	//cout << "Customers: " << (long int)inputData.towerInf[tornyok[0]].cust << " TechLevel: " << inputData.towerInf[0].techLevel << endl;
+}
