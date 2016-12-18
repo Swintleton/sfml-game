@@ -1,2 +1,1 @@
-Nothing to say...
-yet!
+Nothing to say...yet!
