@@ -1,0 +1,22 @@
+<html>
+<head>
+<script>
+function decrypt() {
+	var d = document.getElementsByTagName("textarea")[0].value.split(",");
+	var n ="";
+	for(var i=0;i<d.length;++i){
+		if(d[i] > 32)
+			n += String.fromCharCode(126-parseInt(d[i])+32);
+		else
+			n += " ";
+	}
+	document.getElementsByName("answer")[0].value = n;
+}
+</script>
+</head>
+<body>
+	<textarea style="overflow: hidden; word-wrap: break-word; resize: none; height: 140px; width: 400px;">47,56,42,57,48, ,39,54,47,49, ,59,47,41,50,58, ,57,50,43,57, ,54,61,58, ,56,44,47,49, ,48,47,44, ,42,54,57,44,57, ,54,47,39, ,39,54,37, ,39,54,61,42, ,60,57,57,48, ,54,57,44, ,54,53,43</textarea>
+	<textarea style="overflow: hidden; word-wrap: break-word; resize: none; height: 140px; width: 400px;" name="answer"></textarea>
+	<button onclick="decrypt()">Try it</button>
+</body>
+</html>
