@@ -1,0 +1,182 @@
+<html>
+<head>
+<script>
+var hex = "hâ◘H";
+document.write("HexaToAscii: "+HexaToAscii(hex)+"<br /><br />");
+document.write("HexaToChar: "+AsciiToChar(HexaToAscii(hex))+"<br /><br />");
+document.write("HexaToChar: "+AsciiToChar(HexaToAscii(hex))+"<br /><br />");
+
+var binary="1011000000001011";
+document.write("BinaryToChar: "+BinaryToChar(binary)+"<br /><br />");
+document.write("BinaryToAscii: "+BinaryToAscii(binary)+"<br /><br />");
+document.write("BinaryToHex: "+AsciiToHex(BinaryToAscii(binary))+"<br /><br />");
+document.write("BinaryToHexToAsciiToChar: "+AsciiToChar(HexaToAscii(BinaryToAscii(binary)))+"<br /><br />");
+
+document.write("Hardbit: "+BinaryToChar(hardbit(binary))+"<br /><br />");
+
+var text="solution";
+document.write("CharToHax: "+AsciiToHex(BinaryToAscii(binary))+"<br /><br />");
+
+var text2="A place to gather, a place to hide, should be well hidden and plain in sight.Where should you start how to begin, if nothings here except a thin phrase of text and random words, are you still lost does the brain hurts?";
+var text2s=SubeveryX(text2,4);
+document.write("SubeveryX: "+text2s+"<br /><br />");
+document.write("LastChars: "+LastChars(text2)+"<br /><br />");
+
+document.write("ReverseChars: "+ReverseChars(text2s)+"<br /><br />");
+
+var most = AsciiToChar(ReverseAscii(BinaryToAscii(binary)));
+document.write("MOST: "+most+"<br /><br />");
+
+var one="00000000";//0
+var two="11111111";//255
+document.write("XNORed: "+XNOR(one,two)+"<br /><br />");
+
+function HexaToAscii(hex){
+  var number=0;
+  var dec="";
+  for(var i=2;i<=hex.length;i+=2){
+    number=hex.substring(i-2,i);
+    number=parseInt(number,16);
+    dec+=number+" ";
+  }
+  return dec;
+}
+function HexaToAscii1(hexa){
+	var dec = "";
+	dec=parseInt(hexa,16);
+}
+
+function AsciiToHex(dec){
+  var number=0;
+  var hex="";
+  for(var i=1;i<=dec.length;++i){
+    number=dec.substring(i-1,i);
+    number=number.charCodeAt(0).toString(16);
+    hex+=number+" ";
+  }
+  return hex;
+}
+
+function AsciiToChar(Ascii){
+  var number="";
+  var dec="";var s=0;
+    for(var i=0;i<Ascii.length;++i){
+      number="";s=0;
+      while(Ascii[i]!=' ' & i+1<Ascii.length){
+        ++s;++i;number=+Ascii.substring(i-s,i);
+      }
+      dec+=String.fromCharCode(number);
+  }
+  return dec;
+}
+
+function BinaryToChar(binary){
+	var binary8;
+	var digit;
+	var text="";
+	var x=8;
+	for(var i=x;i<binary.length+2;i+=x){
+		binary8=binary.substring(i-x,i);
+		digit=parseInt(binary8,2);
+		digit=String.fromCharCode(digit);
+		text+=digit;
+	}
+	return text;
+}
+
+function BinaryToAscii(binary){
+	var binary8;
+	var digit;
+	var text="";
+	var x=8;
+	for(var i=x;i<binary.length+2;i+=x){
+		binary8=binary.substring(i-x,i);
+		digit=parseInt(binary8,2);
+		text+=digit+" ";
+	}
+	return text;
+}
+
+function hardbit(binary){
+	var binaryn="",x=1804289383;
+	for(var i=0;i<binary.length;++i){
+		binaryn+=binary[i]^(x%2);
+	}
+	return binaryn;
+}
+
+function CharToAscii(text){
+	var number=0;
+	var ascii="";
+	for(var i=0;i<text.length;++i){
+		number=text.substring(i-1,i);
+		number=number.charCodeAt(0);
+		ascii+=number+" ";
+	}
+	return ascii;
+}
+
+function XOR(text){
+	var key="14";
+	var text=text;
+	var outText="";
+	for(var i=0;i<text.length;){
+		for(var j=0;j<key.length && i<text.length;++j,++i){
+			outText+=text[i]^key;
+		}
+	}  
+}
+
+function ReverseAscii(ascii){
+	var ascii2="";
+	for(var i=ascii.length-1;i>=0;i-=3){			//becaue spaces
+		ascii2+=ascii.substring(i-2,i)+" ";
+	}
+	return ascii2;
+}
+
+function ReverseChars(text){
+	var text2="";
+	for(var i=0;i<text.length;++i){
+		text2+=text[text.length-(i+1)];
+	}
+	return text2;
+}
+
+function SubeveryX(text,X){
+	var text2="";
+	for(var i=0;i<text.length;++i){
+		if(i%X==0){
+			text2+=text[i];
+		}
+	}
+	return text2;
+}
+
+function LastChars(text){
+	var text2="";
+	for(var i=0;i<text.length;++i){
+		if(text[i]==' '){
+			text2+=text[i-1];
+		}
+	}
+	text2+=text[text.length-1];
+	return text2;
+}
+function XNOR(one,two){
+	var XNORed = "";
+	for(var i=1;i<one.length;++i){
+		if((one.substring(i-1,i)==0 && two.substring(i-1,i)==0)||(one.substring(i-1,i)==1 && two.substring(i-1,i)==1)){
+			XNORed+="1";
+		}
+		else{
+			XNORed+="0";
+		}
+	}
+	return XNORed;
+}
+</script>
+</head>
+<body>
+</body>
+</html>
