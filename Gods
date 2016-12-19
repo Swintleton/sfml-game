@@ -1,20 +1,20 @@
 var name = "";
 for(var i=0;i<8;++i){
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g1")
-	name+="khnum ";
+	name+="Khnum   ";
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g2")
-	name+="anubis ";
+	name+="Anubis ";
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g3")
-	name+="sobek ";
+	name+="Sobek   ";
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g4")
-	name+="thoth ";
+	name+="Thoth   ";
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g5")
-	name+="ra ";
+	name+="Ra   ";
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g6")
-	name+="horus ";
+	name+="Horus   ";
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g7")
-	name+="ra ";
+	name+="Ra   ";
 	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g8")
-	name+="amon ";
+	name+="Amun ";
 }
 window.open(name);
