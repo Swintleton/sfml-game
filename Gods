@@ -1,0 +1,20 @@
+var name = "";
+for(var i=0;i<8;++i){
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g1")
+	name+="khnum ";
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g2")
+	name+="anubis ";
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g3")
+	name+="sobek ";
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g4")
+	name+="thoth ";
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g5")
+	name+="ra ";
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g6")
+	name+="horus ";
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g7")
+	name+="ra ";
+	if(document.getElementsByTagName("img")[i].src.substring(document.getElementsByTagName("img")[i].src.length-6, document.getElementsByTagName("img")[i].src.length-4)=="g8")
+	name+="amon ";
+}
+window.open(name);
