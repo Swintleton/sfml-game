@@ -1,0 +1,1 @@
+var text = document.all[3].textContent.split('|')
