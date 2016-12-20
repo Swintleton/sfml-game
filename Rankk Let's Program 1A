@@ -1,0 +1,13 @@
+var x = [];
+var y = 0;
+for(var i=0;i<x.length;++i){
+	if(x[i]%2==0){
+		x[i]-=1;
+		x[i]*=3;
+		y+=x[i];
+	}
+	else{
+		x[i]*=2;
+		y+=x[i];
+	}
+}
