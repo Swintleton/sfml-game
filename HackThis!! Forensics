@@ -3,7 +3,7 @@
 At this part I used kali linux:
 
 2. Open Binwalk and run this code:
-[code]binwalk -e forensics1.img[/code]
+binwalk -e forensics1.img
 
 This will extract the known file types... (this is not the best way to gain those files from the img file)
 
