@@ -1,6 +1,6 @@
 1. Analyze the file with notepad ---> we find which files contain the img file.
 
-At this part i used kali linux:
+At this part I used kali linux:
 
 2. Open Binwalk and run this code:
 [code]binwalk -e forensics1.img[/code]
