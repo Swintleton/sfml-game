@@ -1,6 +1,7 @@
 <html>
 <head>
 <script>
+//THIS PROGRAM IS ONLY FOR CONVERTING
 var hex = "hâ◘H";
 document.write("HexaToAscii: "+HexaToAscii(hex)+"<br /><br />");
 document.write("HexaToChar: "+AsciiToChar(HexaToAscii(hex))+"<br /><br />");
