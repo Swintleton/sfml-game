@@ -11,7 +11,9 @@ I'm working on it on my free time, and I'm using Visual Studio 2017 Community as
 I gladly listen for any suggestion, and do not hesitate to ask about the game or anything else.
 
 
-My contact:
+My contacts:
+
+
 E-mail: keragon2@gmail.com (please use subject: SFML GAME or something like that, to increase my attention :) )
 
 Discord: Kerachi#4763
