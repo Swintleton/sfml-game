@@ -1,4 +1,5 @@
 IMPORTANT:
+
 If you download it make sure, to paste the sfml bin, include and lib folder inside the sfml folder, otherwise it won't work.
 
 LESS IMPORTANT:
