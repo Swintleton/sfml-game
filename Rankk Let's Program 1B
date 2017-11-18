@@ -1,3 +1,0 @@
-var text = document.all[3].textContent.replace(/\n/g,'|').split('|').map(Number);
-var cc = 0;
-var osz=0; for(var i=2;i<text.length;i+=3){osz+=text[i];++cc;} osz/=cc;
