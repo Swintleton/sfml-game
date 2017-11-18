@@ -1,6 +1,7 @@
 IMPORTANT:
 
 If you download it make sure, to paste the sfml bin, include and lib folder inside the sfml folder, otherwise it won't work.
+
 If you want to try it out, you can do so by downloading the Debug folder and run the sfml 1.exe.
 
 LESS IMPORTANT:
