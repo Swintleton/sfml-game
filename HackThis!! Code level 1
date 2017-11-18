@@ -1,8 +1,0 @@
-	var t = document.getElementsByTagName("textarea")[0].value.split(", ").sort();
-	var eredmeny = "";
-	for(var i = 0; i<darabok.length; i++)
-	{
-		eredmeny += t[i] + ", ";
-	}
-	eredmeny = eredmeny.substring(0, eredmeny.length-2);
-	document.getElementsByName("answer")[0].value = eredmeny;
