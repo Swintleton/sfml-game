@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include <iostream>
 
 Player::Player(sf::Texture Texture, float posX,float posY):
 	stopped_Texture(Texture), textureWidth(96), textureHeight(96),animation(96,96,7,0.07f)
@@ -29,7 +30,7 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 		direction = directions::UP;
 		moving = true;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		movement.y += speed * deltaTime;
 		direction = directions::DOWN;
 		moving = true;
@@ -39,14 +40,14 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 		direction = directions::LEFT;
 		moving = true;
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		movement.x += speed * deltaTime;
 		direction = directions::RIGHT;
 		moving = true;
 	}
 	//IN CASE OF DIAGONAL MOVING, IT'S SHOULD SLOW DOWN
 	if(movement.y != 0.f && movement.x != 0.f)
-		movement /= std::sqrt(2.f);
+		movement /= SQRT_2;
 
 	if (movement.y < 0.f && movement.x > 0.f)
 	{
@@ -92,27 +93,27 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 				else if (direction == DOWN) {
 					movement.y -= 2*speed * deltaTime;
 				}
-				else if (direction == LEFT) {
+				if (direction == LEFT) {
 					movement.x += 2*speed * deltaTime;
 				}
 				else if (direction == RIGHT) {
 					movement.x -=2* speed * deltaTime;
 				}
-				else if (direction == UP_RIGHT) {
-					movement.y += std::sqrt(2.f) * speed * deltaTime;
-					movement.x -= std::sqrt(2.f) * speed * deltaTime;
+				if (direction == UP_RIGHT) {
+					movement.y += SQRT_2 * speed * deltaTime;
+					movement.x -= SQRT_2 * speed * deltaTime;
 				}
 				else if (direction == UP_LEFT) {
-					movement.y += std::sqrt(2.f) * speed * deltaTime;
-					movement.x += std::sqrt(2.f) * speed * deltaTime;
+					movement.y += SQRT_2 * speed * deltaTime;
+					movement.x += SQRT_2 * speed * deltaTime;
 				}
 				else if (direction == DOWN_RIGHT) {
-					movement.y -= std::sqrt(2.f) * speed * deltaTime;
-					movement.x -= std::sqrt(2.f) * speed * deltaTime;
+					movement.y -= SQRT_2 * speed * deltaTime;
+					movement.x -= SQRT_2 * speed * deltaTime;
 				}
 				else if (direction == DOWN_LEFT) {
-					movement.y -= std::sqrt(2.f) * speed * deltaTime;
-					movement.x += std::sqrt(2.f) * speed * deltaTime;
+					movement.y -= SQRT_2 * speed * deltaTime;
+					movement.x += SQRT_2 * speed * deltaTime;
 				}
 				player.move(movement);
 			}
