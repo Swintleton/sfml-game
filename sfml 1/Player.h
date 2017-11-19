@@ -31,6 +31,7 @@ private:
 
 	float speed;
 	bool moving;
+	const float SQRT_2 = std::sqrt(2.f);
 
 	Animation animation;
 };
