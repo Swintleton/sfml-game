@@ -6,7 +6,7 @@ Wall::Wall(sf::Texture _texture, float posX, float posY):texture(_texture)
 	wal.setTexture(nullptr);
 	wal.setSize(sf::Vector2f { 10, 10 });
 	wal.setPosition(posX, posY);
-	wal.setOrigin(5,30);
+	wal.setOrigin(5,25);
 
 	wall.setTexture(texture);
 	wall.setOrigin(31,55);
