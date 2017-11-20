@@ -84,7 +84,7 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 		animation.update(direction, walking_Texture, player, deltaTime);
 
 		player.move(movement);
-		
+
 		for (sf::RectangleShape *other : collisionList) {
 			if (player.getGlobalBounds().intersects(other->getGlobalBounds())) {
 				if (direction == UP) {
@@ -129,6 +129,10 @@ void const Player::draw(sf::RenderWindow &window)
 sf::Vector2f Player::getPositon()
 {
 	return player.getPosition();
+}
+sf::Vector2f Player::getOrigin()
+{
+	return player.getOrigin();
 }
 
 Player::~Player(void)
