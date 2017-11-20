@@ -9,8 +9,8 @@ public:
 	~Wall();
 
 	sf::RectangleShape wal;		//ONLY FOR COLLISION
-private:
 	sf::Sprite wall;
+private:
+	
 	sf::Texture texture;
 };
-
