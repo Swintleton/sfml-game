@@ -1,0 +1,11 @@
+﻿  main.cpp
+d:\saves\c++\sfml\sfml 1\sfml 1\main.cpp(25): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\main.cpp(25): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\main.cpp(34): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\main.cpp(115): warning C4018: '>=': signed/unsigned mismatch
+  Player.cpp
+d:\saves\c++\sfml\sfml 1\sfml 1\player.cpp(7): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Animation.cpp
+d:\saves\c++\sfml\sfml 1\sfml 1\animation.cpp(6): warning C4244: 'initializing': conversion from 'float' to 'unsigned short', possible loss of data
+  Generating Code...
+  sfml 1.vcxproj -> D:\Saves\C++\SFML\sfml 1\Debug\sfml 1.exe
