@@ -16,13 +16,15 @@ public:
 	void const draw(sf::RenderWindow &);
 
 	sf::Vector2f getPositon();
+	sf::Vector2f getOrigin();
 
 	enum directions { RIGHT, UP,UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
 	directions direction;
 
+	sf::Sprite player;
 	~Player(void);
 private:
-	sf::Sprite player;
+	
 	sf::Texture stopped_Texture;
 	sf::Texture walking_Texture;
 
