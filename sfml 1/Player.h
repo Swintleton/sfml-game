@@ -12,13 +12,13 @@ public:
 
 	void addWalkingTexutre(sf::Texture);
 
-	void const update(float deltaTime, std::list<sf::RectangleShape *> &);
+	void const update(float, std::list<sf::RectangleShape *> &);
 	void const draw(sf::RenderWindow &);
 
 	sf::Vector2f getPositon();
 	sf::Vector2f getOrigin();
 
-	enum directions { RIGHT, UP,UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
+	enum directions { RIGHT, UP, UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
 	directions direction;
 
 	sf::Sprite player;
@@ -37,4 +37,3 @@ private:
 
 	Animation animation;
 };
-
