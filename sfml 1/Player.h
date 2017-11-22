@@ -1,8 +1,6 @@
 #pragma once
 #include <SFML\Graphics.hpp>
-#include <string>
 #include <list>
-#include <algorithm>
 #include "Animation.h"
 
 class Player
@@ -17,14 +15,14 @@ public:
 
 	sf::Vector2f getPositon();
 	sf::Vector2f getOrigin();
+	sf::Sprite getSprite();
 
 	enum directions { RIGHT, UP, UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
 	directions direction;
-
-	sf::Sprite player;
+	
 	~Player(void);
 private:
-	
+	sf::Sprite player;
 	sf::Texture stopped_Texture;
 	sf::Texture walking_Texture;
 

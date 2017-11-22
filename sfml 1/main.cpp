@@ -1,14 +1,9 @@
 #include "stdafx.h"
 
-#include <sfml\Graphics.hpp>
-
 #include <iostream>
-#include <list>
-#include <vector>
 
 #include "Player.h"
-#include "Animation.h"
-#include "Wall.h"
+#include "Solid.h"
 
 static const float VIEW_HEIGHT = 800.f;
 
@@ -16,14 +11,8 @@ using namespace std;
 
 unsigned int frameCount = 0;
 
-std::list<sf::Sprite *> collisionSpriteList;
-std::list<sf::RectangleShape *> collisionList;	//ALL THE WALL RectangleShape for collision check ... I do it in the player.ccp
-std::vector<sf::Vector2f> playerBeforeWall;		//This 2 contains the coordinates of the collison RectangleShapes...
-std::vector<sf::Vector2f> playerBehindWall;
-
-
 int main() {
-	sf::RenderWindow window(sf::VideoMode(VIEW_HEIGHT, VIEW_HEIGHT-200.f), "SFML 1", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(VIEW_HEIGHT, VIEW_HEIGHT-200), "SFML 1", sf::Style::Default);
 	window.setFramerateLimit(60);
 
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.f, 600.0f));
@@ -32,39 +21,42 @@ int main() {
 	sf::Texture texture;
 	texture.loadFromFile("Textures/stopped/stopped.bmp");
 
-	Player player(texture, window.getSize().x / 2, window.getSize().y / 2+300);
+	Player player(texture, window.getSize().x / 2.f, window.getSize().y / 2.f+300);
 	texture.loadFromFile("Textures/walking/walking.bmp");
 	player.addWalkingTexutre(texture);
 
 	texture.loadFromFile("Textures/walls/wall0.bmp");
-	Wall wall1(texture, 250.f, 400.f);
-	collisionList.push_back(&wall1.wal);
-	playerBehindWall.push_back(wall1.wal.getPosition());
-	playerBeforeWall.push_back(sf::Vector2f{ wall1.wal.getPosition().x, wall1.wal.getPosition().y + 60 });
-	//if player is behind a wall, then the wall collision RectangleShapes should be lower in y axis
-	collisionSpriteList.push_back(&wall1.wall);
-	
+	walls.push_back(Wall(texture, 500.f, 445.f, 0));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 30));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
 
-	Wall wall2(texture, 0.f, 300.f);
-	collisionList.push_back(&wall2.wal);
-	playerBehindWall.push_back(wall2.wal.getPosition());
-	playerBeforeWall.push_back(sf::Vector2f{ wall2.wal.getPosition().x, wall2.wal.getPosition().y + 60 });
-	collisionSpriteList.push_back(&wall2.wall);
+	texture.loadFromFile("Textures/walls/wall0.bmp");
+	walls.push_back(Wall(texture, 584.f, 420.f, 0));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 30));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
 
-	Wall wall3(texture, 90.f, 600.f);
-	collisionList.push_back(&wall3.wal);
-	playerBehindWall.push_back(wall3.wal.getPosition());
-	playerBeforeWall.push_back(sf::Vector2f{ wall3.wal.getPosition().x, wall3.wal.getPosition().y + 60 });
-	collisionSpriteList.push_back(&wall3.wall);
+	texture.loadFromFile("Textures/walls/wall1.bmp");
+	walls.push_back(Wall(texture, 500.f, 600.f, 4));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 60));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
 
-	Wall wall4(texture, 63.f, 300.f);
-	collisionList.push_back(&wall4.wal);
-	playerBehindWall.push_back(wall4.wal.getPosition());
-	playerBeforeWall.push_back(sf::Vector2f{ wall4.wal.getPosition().x, wall4.wal.getPosition().y + 60 });
-	collisionSpriteList.push_back(&wall4.wall);
-//-----------------------------------------------------------------------------------------------------------
+	texture.loadFromFile("Textures/walls/wall1.bmp");
+	walls.push_back(Wall(texture, 563.f, 600.f, 4));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 60));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
 
-	/*		I don't really met with this, so I don't want to delete it :/
+	texture.loadFromFile("Textures/walls/wall1.bmp");
+	walls.push_back(Wall(texture, 626.f, 600.f, 4));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 60));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
+	//-----------------------------------------------------------------------------------------------------------
+
+	/*
 	for (std::list<sf::RectangleShape *>::iterator i = collisionList.begin(); i != collisionList.end(); ++i)
 	cout << *i << " ";
 	cout << endl;
@@ -76,7 +68,6 @@ int main() {
 
 	bool playerBeforeWalls = false;
 	int stepper = 0;
-	unsigned short closestWall = 0;
 
 	while (window.isOpen())
 	{
@@ -115,36 +106,35 @@ int main() {
 		view.setCenter(player.getPositon());
 		window.setView(view);
 
-		playerBeforeWalls = false;
+		//playerBeforeWalls = false;
 		stepper = 0;
 
 		//PUT THE COLLISION RECT UP OR DOWN
 		for (sf::RectangleShape *other : collisionList) {
-			if (player.getPositon().y < other->getPosition().y) {
+			if (player.getPositon().y < other->getPosition().y + 30)
 				other->setPosition(playerBeforeWall[stepper]);
-			}
-			if (player.getPositon().y > other->getPosition().y - 30) {	//the -30 only for change quicker
+			if (player.getPositon().y > other->getPosition().y - 30)	//the -30 only for change quicker
 				other->setPosition(playerBehindWall[stepper]);
-			}
 			++stepper;
 		}
 		//IF PLAYER IS COLLISIONED WITH A WALL THE DECIDE IT IS BEFORE THE WALL OR NOT
-		for (sf::Sprite *other : collisionSpriteList) {
-			if (player.player.getGlobalBounds().intersects(other->getGlobalBounds())) {
-				if (player.getPositon().y < (other->getPosition().y+(other->getOrigin().y/2)))
+		for (Wall other : walls) {
+			if (player.getSprite().getGlobalBounds().intersects(other.getSprite().getGlobalBounds())) {
+				if ((player.getPositon().y-30) < other.getSprite().getPosition().y) {
 					playerBeforeWalls = true;
-				else
+					break;
+				}
+				else {
 					playerBeforeWalls = false;
+				}
 			}
 		}
-		
-		if (playerBeforeWalls)
+		if(playerBeforeWalls)
 			player.draw(window);
-		wall1.draw(window);
-		wall2.draw(window);
-		wall3.draw(window);
-		wall4.draw(window);
-		if(!playerBeforeWalls)
+		for (Wall wal : walls) {
+				wal.draw(window);
+		}
+		if (!playerBeforeWalls)
 			player.draw(window);
 
 		window.display();

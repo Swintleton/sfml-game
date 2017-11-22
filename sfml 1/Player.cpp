@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Player.h"
-#include <iostream>
 
 Player::Player(sf::Texture Texture, float posX,float posY):
 	stopped_Texture(Texture), textureWidth(96), textureHeight(96),animation(96,96,7,0.07f)
@@ -69,7 +68,7 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 //----------------------SET STOPPED TEXTURE----------------------------
 	if (!moving) {
 		player.setTexture(stopped_Texture);
-		player.setTextureRect(sf::IntRect(textureWidth * direction, 0, textureWidth, textureHeight));
+		player.setTextureRect(sf::IntRect(textureWidth * direction + 20, 20, 56, 76));
 
 		/*
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -133,6 +132,9 @@ sf::Vector2f Player::getPositon()
 sf::Vector2f Player::getOrigin()
 {
 	return player.getOrigin();
+}
+sf::Sprite Player::getSprite() {
+	return player;
 }
 
 Player::~Player(void)
