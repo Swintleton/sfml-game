@@ -15,7 +15,7 @@ void Animation::update(unsigned int direction,sf::Texture &texture, sf::Sprite &
 			currentImage = 0;
 
 		player.setTexture(texture);
-		player.setTextureRect(sf::IntRect(textureWidth * currentImage+20, textureHeight * direction+20, 56, 76));
+		player.setTextureRect(sf::IntRect(textureWidth * currentImage, textureHeight * direction, textureWidth, textureHeight));
 		
 		++currentImage;
 	}

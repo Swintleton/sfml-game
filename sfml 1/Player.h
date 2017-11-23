@@ -11,11 +11,9 @@ public:
 	void addWalkingTexutre(sf::Texture);
 
 	void const update(float, std::list<sf::RectangleShape *> &);
-	void const draw(sf::RenderWindow &);
+	void const draw(sf::RenderWindow &) const;
 
-	sf::Vector2f getPositon();
-	sf::Vector2f getOrigin();
-	sf::Sprite getSprite();
+	sf::RectangleShape collisionRect;
 
 	enum directions { RIGHT, UP, UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
 	directions direction;

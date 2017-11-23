@@ -1,4 +1,2 @@
-﻿  main.cpp
-d:\saves\c++\sfml\sfml 1\sfml 1\main.cpp(15): warning C4244: 'argument': conversion from 'float' to 'unsigned int', possible loss of data
-d:\saves\c++\sfml\sfml 1\sfml 1\main.cpp(15): warning C4244: 'argument': conversion from 'const float' to 'unsigned int', possible loss of data
+﻿  Wall.cpp
   sfml 1.vcxproj -> D:\Saves\C++\SFML\sfml 1\Debug\sfml 1.exe

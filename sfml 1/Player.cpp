@@ -7,6 +7,11 @@ Player::Player(sf::Texture Texture, float posX,float posY):
 	player.setOrigin(textureWidth/2, textureHeight/2);
 	player.setPosition(posX, posY);
 
+	collisionRect.setTexture(nullptr);
+	collisionRect.setPosition(posX, posY);
+	collisionRect.setSize(sf::Vector2f{ 26, 44 });
+	collisionRect.setOrigin(13, 22);
+
 	moving = false;
 
 	player.setTexture(stopped_Texture);
@@ -21,7 +26,7 @@ void Player::addWalkingTexutre(sf::Texture Texture) {
 
 void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &collisionList)
 {
-	sf::Vector2f movement(0.0f, 0.0f);
+	sf::Vector2f movement(0.f, 0.f);
 	moving = false;
 //----------------------DECIDE WALKING DIRECTION-----------------------
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
@@ -68,24 +73,18 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 //----------------------SET STOPPED TEXTURE----------------------------
 	if (!moving) {
 		player.setTexture(stopped_Texture);
-		player.setTextureRect(sf::IntRect(textureWidth * direction + 20, 20, 56, 76));
-
-		/*
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-			sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-			player.setPosition((float)mousePos.x, (float)mousePos.y);
-		}
-		*/
+		player.setTextureRect(sf::IntRect(textureWidth * direction, 0, textureWidth, textureHeight));
 	}
 //---------------------------------------------------------------------
 //----------------------ANIMATION & COLLISION & MOVE-------------------
 	if (moving) {
 		animation.update(direction, walking_Texture, player, deltaTime);
 
+		collisionRect.move(movement);
 		player.move(movement);
 
 		for (sf::RectangleShape *other : collisionList) {
-			if (player.getGlobalBounds().intersects(other->getGlobalBounds())) {
+			if (collisionRect.getGlobalBounds().intersects(other->getGlobalBounds())) {
 				if (direction == UP) {
 					movement.y += 2*speed * deltaTime;
 				}
@@ -114,6 +113,7 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 					movement.y -= SQRT_2 * speed * deltaTime;
 					movement.x += SQRT_2 * speed * deltaTime;
 				}
+				collisionRect.move(movement);
 				player.move(movement);
 			}
 		}
@@ -121,20 +121,10 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 //---------------------------------------------------------------------
 }
 
-void const Player::draw(sf::RenderWindow &window)
+void const Player::draw(sf::RenderWindow &window) const
 {
+	//window.draw(collisionRect);
 	window.draw(player);
-}
-sf::Vector2f Player::getPositon()
-{
-	return player.getPosition();
-}
-sf::Vector2f Player::getOrigin()
-{
-	return player.getOrigin();
-}
-sf::Sprite Player::getSprite() {
-	return player;
 }
 
 Player::~Player(void)
