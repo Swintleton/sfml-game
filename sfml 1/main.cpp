@@ -25,25 +25,27 @@ int main() {
 	texture.loadFromFile("Textures/walking/walking.bmp");
 	player.addWalkingTexutre(texture);
 
-	texture.loadFromFile("Textures/walls/wall0.bmp");
-	walls.push_back(Wall(texture, 500.f, 445.f, 0));
-	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 30));
-	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
-	collisionList.push_back(&walls.back().collisionRect);
-
-	texture.loadFromFile("Textures/walls/wall0.bmp");
-	walls.push_back(Wall(texture, 584.f, 420.f, 0));
-	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 30));
-	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
-	collisionList.push_back(&walls.back().collisionRect);
-
 	texture.loadFromFile("Textures/walls/wall1.bmp");
+	walls.push_back(Wall(texture, 500.f, 490.f, 4));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 30));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
+
+	walls.push_back(Wall(texture, 563.f, 490.f, 4));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 30));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
+
+	walls.push_back(Wall(texture, 626.f, 490.f, 4));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 30));
+	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
+	collisionList.push_back(&walls.back().collisionRect);
+
 	walls.push_back(Wall(texture, 500.f, 600.f, 4));
 	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 60));
 	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
 	collisionList.push_back(&walls.back().collisionRect);
 
-	texture.loadFromFile("Textures/walls/wall1.bmp");
 	walls.push_back(Wall(texture, 563.f, 600.f, 4));
 	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 60));
 	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
@@ -117,25 +119,26 @@ int main() {
 				other->setPosition(playerBehindWall[stepper]);
 			++stepper;
 		}
-		//IF PLAYER IS COLLISIONED WITH A WALL THE DECIDE IT IS BEFORE THE WALL OR NOT
-		for (Wall other : walls) {
+
+		//IF PLAYER IS BEFORE THE WALL OR NOT
+		for (Wall &other : walls) {
+			other.layer = 0;
 			if (player.getSprite().getGlobalBounds().intersects(other.getSprite().getGlobalBounds())) {
-				if ((player.getPositon().y-30) < other.getSprite().getPosition().y) {
-					playerBeforeWalls = true;
-					break;
-				}
-				else {
-					playerBeforeWalls = false;
+				if (player.getPositon().y < other.collisionRect.getPosition().y) {
+					other.layer = 1;
 				}
 			}
 		}
-		if(playerBeforeWalls)
-			player.draw(window);
+
 		for (Wall wal : walls) {
+			if(wal.layer == 0)
 				wal.draw(window);
 		}
-		if (!playerBeforeWalls)
-			player.draw(window);
+		player.draw(window);
+		for (Wall wal : walls) {
+			if (wal.layer == 1)
+				wal.draw(window);
+		}
 
 		window.display();
 	}

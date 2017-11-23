@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Wall.h"
 
-Wall::Wall(sf::Texture _texture, float posX, float posY,unsigned short _direction):texture(_texture)
+Wall::Wall(sf::Texture _texture, float posX, float posY,unsigned short _direction):texture(_texture),layer(0)
 {
 	direction = (directions)_direction;
 
