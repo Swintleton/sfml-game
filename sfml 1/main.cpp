@@ -122,11 +122,12 @@ int main() {
 
 		//IF PLAYER IS BEFORE THE WALL OR NOT
 		for (Wall &other : walls) {
-			other.layer = 0;
 			if (player.getSprite().getGlobalBounds().intersects(other.getSprite().getGlobalBounds())) {
 				if (player.getPositon().y < other.collisionRect.getPosition().y) {
 					other.layer = 1;
 				}
+				else
+					other.layer = 0;
 			}
 		}
 
