@@ -10,13 +10,14 @@ public:
 	Menu(float, float);
 	virtual ~Menu();
 
-	void draw(sf::RenderWindow &);
+	void draw(sf::RenderWindow &) const;
 	void moveUp();
 	void moveDown();
-	std::vector<float> getPosition(int, sf::RenderWindow &);
+	void update(sf::Vector2f, float, sf::RenderWindow &);
 	void setSelectedItem(unsigned short index);
 private:
 	unsigned short selectedItemIndex;
 	sf::Font font;
 	sf::Text menu[ITEMS_COUNT];
+	sf::RectangleShape rcs[ITEMS_COUNT];
 };

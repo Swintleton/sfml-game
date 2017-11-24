@@ -4,12 +4,9 @@
 
 #include "Player.h"
 #include "Solid.h"
+#include "Menu.h"
 
 static const float VIEW_HEIGHT = 800.f;
-
-using namespace std;
-
-unsigned int frameCount = 0;
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(VIEW_HEIGHT, VIEW_HEIGHT-200), "SFML 1", sf::Style::Default);
@@ -17,6 +14,7 @@ int main() {
 
 	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.f, 600.0f));
 
+	Menu menu(VIEW_HEIGHT, VIEW_HEIGHT-200);
 //------------------------------CREATE PLAYER & ENVIRONMENT--------------------------------------------------
 	sf::Texture texture;
 	texture.loadFromFile("Textures/stopped/stopped.bmp");
@@ -57,32 +55,47 @@ int main() {
 	collisionList.push_back(&walls.back().collisionRect);
 
 	texture.loadFromFile("Textures/walls/wall0.bmp");
-	walls.push_back(Wall(texture, 750.f, 520.f, 0));
-	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 40));
+	walls.push_back(Wall(texture, 720.f, 540.f, 0));
+	playerBeforeWall.push_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 50));
 	playerBehindWall.push_back(walls.back().collisionRect.getPosition());
 	collisionList.push_back(&walls.back().collisionRect);
-	//-----------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------
+//------------------------------DECLARATIONS-----------------------------------------------------------------
+	bool menuOn = false;
 
-	sf::Clock clock;	//CHECKING FPS
-	sf::Clock clock2;	//PLAYER UPDATE ... for player movements...
-	sf::Event eventt;
+	unsigned int frameCount = 0;
+	float time = 0.f;
+	sf::Clock clock;
 
-	bool playerBeforeWalls = false;
+	float deltaTime = 0.f;
 	int stepper = 0;
+//-----------------------------------------------------------------------------------------------------------
 
 	while (window.isOpen())
 	{
-		//hardcore fps counter
+		sf::Event event;
+
+		window.clear(sf::Color(150, 150, 150));
+
+		time = clock.restart().asSeconds();
+
+		player.update(time, collisionList);
+
+		view.setCenter(player.collisionRect.getPosition());
+		window.setView(view);
+
+		//fps counter
 		++frameCount;
-		if (clock.getElapsedTime().asSeconds() >= 1.0f) {
-			clock.restart();
-			cout << "FPS: " << frameCount << endl;
+		deltaTime += time;
+		if (deltaTime >= 1.f) {
+			deltaTime -= 1.f;
+			std::cout << "FPS: " << frameCount << std::endl;
 			frameCount = 0;
 		}
 
-		while (window.pollEvent(eventt))
+		while (window.pollEvent(event))
 		{
-			switch (eventt.type)
+			switch (event.type)
 			{
 				case sf::Event::Closed:
 					window.close();
@@ -90,38 +103,44 @@ int main() {
 				case sf::Event::Resized:
 					view.setSize(VIEW_HEIGHT * (float(window.getSize().x) / float(window.getSize().y)), VIEW_HEIGHT);
 					break;
-				/*		I will need this later...		I think
+				case sf::Event::KeyPressed:
+					switch (event.key.code)
+					{
+						case sf::Keyboard::Escape:
+							menuOn=!menuOn;
+							break;
+						case sf::Keyboard::Up:
+							menu.moveUp();
+							break;
+						case sf::Keyboard::Down:
+							menu.moveDown();
+							break;
+					}
+					break;
+				/*
 				case sf::Event::TextEntered:
-					if (eventt.text.unicode < 128) {
-						//printf("%c", eventt.text.unicode);
+					if (event.text.unicode < 128) {
+						//printf("%c", event.text.unicode);
 					}
 					break;
 				*/
 			}
 		}
 
-		window.clear(sf::Color(150, 150, 150));
-		
-		player.update(clock2.restart().asSeconds(), collisionList);
-
-		view.setCenter(player.collisionRect.getPosition());
-		window.setView(view);
-
-		//playerBeforeWalls = false;
 		stepper = 0;
 
 		//PUT THE COLLISION RECT UP OR DOWN
 		for (sf::RectangleShape *other : collisionList) {
-			if (player.collisionRect.getPosition().y < other->getPosition().y + 30)
+			if (player.collisionRect.getPosition().y < other->getPosition().y + 30)	//the +30 only for change quicker
 				other->setPosition(playerBeforeWall[stepper]);
-			if (player.collisionRect.getPosition().y > other->getPosition().y - 30)	//the -30 only for change quicker
+			if (player.collisionRect.getPosition().y > other->getPosition().y - 30)
 				other->setPosition(playerBehindWall[stepper]);
 			++stepper;
 		}
 
 		//IF PLAYER IS BEFORE THE WALL OR NOT
 		for (Wall &other : walls) {
-			if (player.collisionRect.getGlobalBounds().intersects(other.getSprite().getGlobalBounds())) {
+			if (player.getSprite().getGlobalBounds().intersects(other.getSprite().getGlobalBounds())) {
 				if (player.collisionRect.getPosition().y < other.collisionRect.getPosition().y) {
 					other.beforePlayer = true;
 				}
@@ -129,7 +148,7 @@ int main() {
 					other.beforePlayer = false;
 			}
 		}
-
+//------------------------------DRAWING EVERYTHING-----------------------------------------------------------
 		for (Wall wal : walls) {
 			if(!wal.beforePlayer)
 				wal.draw(window);
@@ -140,6 +159,11 @@ int main() {
 				wal.draw(window);
 		}
 
+		if (menuOn) {
+			menu.update(player.collisionRect.getPosition(),view.getSize().y,window);
+			menu.draw(window);
+		}
+//-----------------------------------------------------------------------------------------------------------
 		window.display();
 	}
 	return 0;

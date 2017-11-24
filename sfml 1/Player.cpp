@@ -28,7 +28,7 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 {
 	sf::Vector2f movement(0.f, 0.f);
 	moving = false;
-//----------------------DECIDE WALKING DIRECTION-----------------------
+//-------------------------DECIDE WALKING DIRECTION--------------------------
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		movement.y -= speed * deltaTime;
 		direction = directions::UP;
@@ -69,15 +69,15 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 	{
 		direction = directions::DOWN_LEFT;
 	}
-//---------------------------------------------------------------------
-//----------------------SET STOPPED TEXTURE----------------------------
+//---------------------------------------------------------------------------
+//-------------------------SET STOPPED TEXTURE-------------------------------
 	if (!moving) {
 		player.setTexture(stopped_Texture);
 		player.setTextureRect(sf::IntRect(textureWidth * direction, 0, textureWidth, textureHeight));
 	}
-//---------------------------------------------------------------------
-//----------------------ANIMATION & COLLISION & MOVE-------------------
-	if (moving) {
+//---------------------------------------------------------------------------
+//-------------------------ANIMATION & COLLISION & MOVE----------------------
+	else {
 		animation.update(direction, walking_Texture, player, deltaTime);
 
 		collisionRect.move(movement);
@@ -118,15 +118,17 @@ void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &coll
 			}
 		}
 	}
-//---------------------------------------------------------------------
+//---------------------------------------------------------------------------
 }
 
-void const Player::draw(sf::RenderWindow &window) const
-{
+sf::Sprite Player::getSprite() {
+	return player;
+}
+
+void const Player::draw(sf::RenderWindow &window) const{
 	//window.draw(collisionRect);
 	window.draw(player);
 }
 
 Player::~Player(void)
-{
-}
+{}

@@ -6,7 +6,7 @@
 class Player
 {
 public:
-	Player(sf::Texture,float,float);
+	Player(sf::Texture, float, float);
 
 	void addWalkingTexutre(sf::Texture);
 
@@ -18,6 +18,8 @@ public:
 	enum directions { RIGHT, UP, UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
 	directions direction;
 	
+	sf::Sprite getSprite();
+
 	~Player(void);
 private:
 	sf::Sprite player;

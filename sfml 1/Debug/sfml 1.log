@@ -1,2 +1,5 @@
 ﻿  Wall.cpp
+  Player.cpp
+d:\saves\c++\sfml\sfml 1\sfml 1\player.cpp(7): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
   sfml 1.vcxproj -> D:\Saves\C++\SFML\sfml 1\Debug\sfml 1.exe
