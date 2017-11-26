@@ -9,10 +9,10 @@
 static const float VIEW_HEIGHT = 800.f;
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(VIEW_HEIGHT, VIEW_HEIGHT-200), "SFML 1", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode((unsigned int)VIEW_HEIGHT, (unsigned int)VIEW_HEIGHT-200), "SFML 1", sf::Style::Default);
 	window.setFramerateLimit(60);
 
-	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(800.f, 600.0f));
+	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT-200));
 
 	Menu menu(VIEW_HEIGHT, VIEW_HEIGHT-200);
 //------------------------------CREATE PLAYER & ENVIRONMENT--------------------------------------------------
@@ -149,12 +149,12 @@ int main() {
 			}
 		}
 //------------------------------DRAWING EVERYTHING-----------------------------------------------------------
-		for (Wall wal : walls) {
+		for (Wall const &wal : walls) {
 			if(!wal.beforePlayer)
 				wal.draw(window);
 		}
 		player.draw(window);
-		for (Wall wal : walls) {
+		for (Wall const &wal : walls) {
 			if (wal.beforePlayer)
 				wal.draw(window);
 		}

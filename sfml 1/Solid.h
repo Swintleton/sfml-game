@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include "Wall.h"
 
 std::list<Wall> walls;
