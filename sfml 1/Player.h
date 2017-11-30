@@ -1,6 +1,8 @@
 #pragma once
-#include <SFML\Graphics.hpp>
-#include <list>
+#ifndef SFML_GRAPHICS_H
+#define SFML_GRAPHICS_H
+#include <SFML/Graphics.hpp>
+#endif
 #include "Animation.h"
 
 class Player
@@ -10,7 +12,7 @@ public:
 
 	void addWalkingTexutre(sf::Texture);
 
-	void const update(float, std::list<sf::RectangleShape *> &);
+	void const update(float, std::vector<sf::RectangleShape *> &);
 	void const draw(sf::RenderWindow &) const;
 
 	sf::RectangleShape collisionRect;

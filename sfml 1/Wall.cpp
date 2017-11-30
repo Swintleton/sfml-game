@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Wall.h"
 
-Wall::Wall(sf::Texture _texture, float posX, float posY,unsigned short _direction):texture(_texture),beforePlayer(false)
+Wall::Wall(sf::Texture &texture, float posX, float posY, unsigned short _direction) :beforePlayer(false)
 {
 	direction = (directions)_direction;
 
@@ -11,13 +11,13 @@ Wall::Wall(sf::Texture _texture, float posX, float posY,unsigned short _directio
 	wall.setTexture(texture);
 	wall.setPosition(posX, posY);
 
-	if(direction == UP || direction == DOWN) {
+	if (direction == UP || direction == DOWN) {
 		collisionRect.setSize(sf::Vector2f{ 62.f, 40.f });
 		collisionRect.setOrigin(31.f, 30.f);
 
 		wall.setOrigin(31.f, 55.f);
 	}
-	else if(direction == RIGHT || direction == LEFT) {
+	else if (direction == RIGHT || direction == LEFT) {
 		collisionRect.setSize(sf::Vector2f{ 20.f, 64.f });
 		collisionRect.setOrigin(22.f, 40.f);
 
@@ -32,14 +32,11 @@ Wall::Wall(sf::Texture _texture, float posX, float posY,unsigned short _directio
 	}
 }
 
-void Wall::draw(sf::RenderWindow &window) const{
+void Wall::draw(sf::RenderWindow &window) const {
 	window.draw(wall);
 	//window.draw(collisionRect);
 }
 
-sf::Sprite Wall::getSprite() const{
+sf::Sprite Wall::getSprite() const {
 	return wall;
 }
-
-Wall::~Wall(void)
-{}

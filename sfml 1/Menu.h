@@ -1,23 +1,22 @@
 #pragma once
-
-#include <SFML/Graphics.hpp>
+#include "MenuItem.h"
 
 #define ITEMS_COUNT 3
 
 class Menu
 {
 public:
-	Menu(float, float);
-	virtual ~Menu();
+	Menu(float, float, sf::Font &font);
 
 	void draw(sf::RenderWindow &) const;
 	void moveUp();
 	void moveDown();
-	void update(sf::Vector2f, float, sf::RenderWindow &);
+	void update(sf::Vector2f, float, sf::RenderWindow &, sf::Event &);
 	void setSelectedItem(unsigned short index);
+
+	bool visible;
 private:
 	unsigned short selectedItemIndex;
-	sf::Font font;
-	sf::Text menu[ITEMS_COUNT];
-	sf::RectangleShape rcs[ITEMS_COUNT];
+
+	std::vector<MenuItem> menu;
 };

@@ -1,10 +1,13 @@
 #pragma once
-#include <SFML\Graphics.hpp>
+#ifndef SFML_GRAPHICS_H
+#define SFML_GRAPHICS_H
+#include <SFML/Graphics.hpp>
+#endif
 
 class Wall
 {
 public:
-	Wall(sf::Texture, float, float, unsigned short);
+	Wall(sf::Texture &, float, float, unsigned short);
 	void draw(sf::RenderWindow &) const;
 
 	sf::RectangleShape collisionRect;		//ONLY FOR COLLISION
@@ -14,9 +17,6 @@ public:
 
 	enum directions { RIGHT, UP, UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
 	directions direction;
-
-	~Wall(void);
 private:
 	sf::Sprite wall;
-	sf::Texture texture;
 };

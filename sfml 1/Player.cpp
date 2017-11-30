@@ -4,7 +4,7 @@
 Player::Player(sf::Texture Texture, float posX,float posY):
 	stopped_Texture(Texture), textureWidth(96), textureHeight(96),animation(96,96,7,0.07f)
 {
-	player.setOrigin(textureWidth/2, textureHeight/2);
+	player.setOrigin(textureWidth/2.f, textureHeight/2.f);
 	player.setPosition(posX, posY);
 
 	collisionRect.setTexture(nullptr);
@@ -24,7 +24,7 @@ void Player::addWalkingTexutre(sf::Texture Texture) {
 	walking_Texture = Texture;
 }
 
-void const Player::update(float deltaTime, std::list<sf::RectangleShape *> &collisionList)
+void const Player::update(float deltaTime, std::vector<sf::RectangleShape *> &collisionList)
 {
 	sf::Vector2f movement(0.f, 0.f);
 	moving = false;
