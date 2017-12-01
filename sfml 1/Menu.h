@@ -11,7 +11,8 @@ public:
 	void draw(sf::RenderWindow &) const;
 	void moveUp();
 	void moveDown();
-	void update(sf::Vector2f, float, sf::RenderWindow &, sf::Event &);
+	void update(sf::RenderWindow &, sf::Event &);
+	void updatePos(sf::Vector2f, float);
 	void setSelectedItem(unsigned short index);
 
 	bool visible;

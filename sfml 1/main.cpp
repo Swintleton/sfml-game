@@ -15,17 +15,17 @@ void addWall(Wall *w) {
 
 int main() {
 	load();
-	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(VIEW_HEIGHT), static_cast<unsigned int>(VIEW_HEIGHT-200)), "SFML 1", sf::Style::Default);
+	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned int>(VIEW_HEIGHT), static_cast<unsigned int>(VIEW_HEIGHT - 200)), "SFML 1", sf::Style::Default);
 	window.setFramerateLimit(60);
 
-	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT-200));
+	sf::View view(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(VIEW_HEIGHT, VIEW_HEIGHT - 200));
 
-	Menu menu(VIEW_HEIGHT, VIEW_HEIGHT-200, font);
-//------------------------------CREATE PLAYER & ENVIRONMENT--------------------------------------------------
+	Menu menu(VIEW_HEIGHT, VIEW_HEIGHT - 200, font);
+	//------------------------------CREATE PLAYER & ENVIRONMENT--------------------------------------------------
 	sf::Texture texture;
 	texture.loadFromFile("Textures/stopped/stopped.bmp");
 
-	Player player(texture, window.getSize().x / 2.f, window.getSize().y / 2.f+300);
+	Player player(texture, window.getSize().x / 2.f, window.getSize().y / 2.f + 300);
 	texture.loadFromFile("Textures/walking/walking.bmp");
 	player.addWalkingTexutre(texture);
 
@@ -43,15 +43,15 @@ int main() {
 	addWall(&w6);
 	Wall w7(texture_Wall_0, 720.f, 540.f, 0);
 	addWall(&w7);
-//-----------------------------------------------------------------------------------------------------------
-//------------------------------DECLARATIONS-----------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
+	//------------------------------DECLARATIONS-----------------------------------------------------------------
 	unsigned int frameCount = 0;
 	float time = 0.f;
 	sf::Clock clock;
 
 	float deltaTime = 0.f;
 	int stepper = 0;
-//-----------------------------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------------------------
 
 	while (window.isOpen())
 	{
@@ -62,8 +62,7 @@ int main() {
 		time = clock.restart().asSeconds();
 
 		player.update(time, collisionList);
-		if (menu.visible)
-			menu.update(player.getSprite().getPosition(), view.getSize().y, window, event);
+		menu.updatePos(player.getSprite().getPosition(), view.getSize().y);
 
 		view.setCenter(player.collisionRect.getPosition());
 		window.setView(view);
@@ -79,25 +78,25 @@ int main() {
 
 		while (window.pollEvent(event)) {
 			switch (event.type) {
-				case sf::Event::Closed:
-					window.close();
+			case sf::Event::Closed:
+				window.close();
+				break;
+			case sf::Event::Resized:
+				view.setSize(VIEW_HEIGHT * static_cast<float>(window.getSize().x) / static_cast<float>(window.getSize().y), VIEW_HEIGHT);
+				break;
+			case sf::Event::KeyPressed:
+				switch (event.key.code) {
+				case sf::Keyboard::Escape:
+					menu.visible = !menu.visible;
 					break;
-				case sf::Event::Resized:
-					view.setSize(VIEW_HEIGHT * static_cast<float>(window.getSize().x) / static_cast<float>(window.getSize().y), VIEW_HEIGHT);
+				case sf::Keyboard::Up:
+					menu.moveUp();
 					break;
-				case sf::Event::KeyPressed:
-					switch (event.key.code) {
-						case sf::Keyboard::Escape:
-							menu.visible=!menu.visible;
-							break;
-						case sf::Keyboard::Up:
-							menu.moveUp();
-							break;
-						case sf::Keyboard::Down:
-							menu.moveDown();
-							break;
-					}
+				case sf::Keyboard::Down:
+					menu.moveDown();
 					break;
+				}
+				break;
 			}
 		}
 
@@ -122,9 +121,9 @@ int main() {
 					other->beforePlayer = false;
 			}
 		}
-//------------------------------DRAWING EVERYTHING-----------------------------------------------------------
+		//------------------------------DRAWING EVERYTHING-----------------------------------------------------------
 		for (Wall const *wal : walls) {
-			if(!wal->beforePlayer)
+			if (!wal->beforePlayer)
 				wal->draw(window);
 		}
 		player.draw(window);
@@ -133,9 +132,11 @@ int main() {
 				wal->draw(window);
 		}
 
-		if (menu.visible)
+		if (menu.visible) {
+			menu.update(window, event);
 			menu.draw(window);
-//-----------------------------------------------------------------------------------------------------------
+		}
+		//-----------------------------------------------------------------------------------------------------------
 		window.display();
 	}
 	return 0;
