@@ -61,13 +61,13 @@ void Menu::update(sf::Vector2f pos, float height, sf::RenderWindow &window, sf::
 	else if (selectedItemIndex == 2 && (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return))) {
 		window.close();
 	}
-	else if (sf::Mouse::getPosition(window).x > (pos.x - menu[0].rc.getSize().x / 2) && sf::Mouse::getPosition(window).x < (pos.x + menu[0].rc.getSize().x / 2) && sf::Mouse::getPosition(window).y <= (height / (ITEMS_COUNT) + 32) && sf::Mouse::getPosition(window).y > (height / (ITEMS_COUNT))) {
+	else if (sf::Mouse::getPosition(window).x > (window.getSize().x / 2 - menu[0].rc.getSize().x) && sf::Mouse::getPosition(window).x < (window.getSize().x / 2 + menu[0].rc.getSize().x) && sf::Mouse::getPosition(window).y <= (window.getSize().y / (ITEMS_COUNT)        + menu[0].rc.getSize().y * 1.5f) && sf::Mouse::getPosition(window).y >      (window.getSize().y / (ITEMS_COUNT))) {
 		setSelectedItem(0);
 	}
-	else if (sf::Mouse::getPosition(window).x > (pos.x - menu[1].rc.getSize().x / 2) && sf::Mouse::getPosition(window).x < (pos.x + menu[1].rc.getSize().x / 2) && sf::Mouse::getPosition(window).y <= (height / 2 + 32) && sf::Mouse::getPosition(window).y > (height / 2)) {
+	else if (sf::Mouse::getPosition(window).x > (window.getSize().x / 2 - menu[1].rc.getSize().x) && sf::Mouse::getPosition(window).x < (window.getSize().x / 2 + menu[1].rc.getSize().x) && sf::Mouse::getPosition(window).y <= (window.getSize().y / 2                    + menu[1].rc.getSize().y * 1.5f) && sf::Mouse::getPosition(window).y >      (window.getSize().y / 2)) {
 		setSelectedItem(1);
 	}
-	else if (sf::Mouse::getPosition(window).x > (pos.x - menu[2].rc.getSize().x / 2) && sf::Mouse::getPosition(window).x < (pos.x + menu[2].rc.getSize().x / 2) && sf::Mouse::getPosition(window).y <= 2 * (height / (ITEMS_COUNT)+32) && sf::Mouse::getPosition(window).y > 2 * (height / (ITEMS_COUNT))) {
+	else if (sf::Mouse::getPosition(window).x > (window.getSize().x / 2 - menu[2].rc.getSize().x) && sf::Mouse::getPosition(window).x < (window.getSize().x / 2 + menu[2].rc.getSize().x) && sf::Mouse::getPosition(window).y <= 2 * (window.getSize().y / (ITEMS_COUNT)    + menu[2].rc.getSize().y * 1.5f) && sf::Mouse::getPosition(window).y > 2 *  (window.getSize().y / (ITEMS_COUNT))) {
 		setSelectedItem(2);
 	}
 //-------------------------------------------------------------------------------------------------------------
