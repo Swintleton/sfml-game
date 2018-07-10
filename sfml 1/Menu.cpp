@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Menu.h"
+#include <iostream>
 
 Menu::Menu(float width, float height, sf::Font &font) : selectedItemIndex(0), visible(false)
 {
@@ -43,37 +44,51 @@ void Menu::moveDown() {
 	}
 }
 
-void Menu::update(sf::RenderWindow &window, sf::Event &event)
+bool Menu::update(sf::RenderWindow &window)
 {
-	//----------------------------------------MENU ITEMS EVENTS & SELECTIONS----------------------------------------
-	if (selectedItemIndex == 0 && (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return))) {
-		visible = false;
-	}
-	else if (selectedItemIndex == 1 && (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return))) {
+	//SELECTIONS
+	sf::Vector2f MousePos(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
 
-	}
-	else if (selectedItemIndex == 2 && (sf::Mouse::isButtonPressed(sf::Mouse::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return))) {
-		window.close();
-	}
-	else if (sf::Mouse::getPosition(window).x > (window.getSize().x / 2 - menu[0].rc.getSize().x) && sf::Mouse::getPosition(window).x < (window.getSize().x / 2 + menu[0].rc.getSize().x) && sf::Mouse::getPosition(window).y <= (window.getSize().y / (ITEMS_COUNT)+menu[0].rc.getSize().y * 1.5f) && sf::Mouse::getPosition(window).y >(window.getSize().y / (ITEMS_COUNT))) {
+	if (menu[0].rc.getGlobalBounds().contains(MousePos)) {
 		setSelectedItem(0);
 	}
-	else if (sf::Mouse::getPosition(window).x > (window.getSize().x / 2 - menu[1].rc.getSize().x) && sf::Mouse::getPosition(window).x < (window.getSize().x / 2 + menu[1].rc.getSize().x) && sf::Mouse::getPosition(window).y <= (window.getSize().y / 2 + menu[1].rc.getSize().y * 1.5f) && sf::Mouse::getPosition(window).y >(window.getSize().y / 2)) {
+	else if (menu[1].rc.getGlobalBounds().contains(MousePos)) {
 		setSelectedItem(1);
 	}
-	else if (sf::Mouse::getPosition(window).x > (window.getSize().x / 2 - menu[2].rc.getSize().x) && sf::Mouse::getPosition(window).x < (window.getSize().x / 2 + menu[2].rc.getSize().x) && sf::Mouse::getPosition(window).y <= 2 * (window.getSize().y / (ITEMS_COUNT)+menu[2].rc.getSize().y * 1.5f) && sf::Mouse::getPosition(window).y > 2 * (window.getSize().y / (ITEMS_COUNT))) {
+	else if (menu[2].rc.getGlobalBounds().contains(MousePos)) {
 		setSelectedItem(2);
 	}
-	//-------------------------------------------------------------------------------------------------------------
+
+	//EVENTS
+	if ((!sf::Mouse::isButtonPressed(sf::Mouse::Left) || !menu[selectedItemIndex].rc.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+		return 0;
+
+	//Continue
+	if (selectedItemIndex == 0) {
+		visible = false;
+		return 1;
+	}
+	//Options
+	if (selectedItemIndex == 1) {
+		return 1;
+	}
+	//Exit
+	if (selectedItemIndex == 2) {
+		globalMutex.lock();
+		quit = true;
+		globalMutex.unlock();
+		window.close();
+		return 1;
+	}
 }
 
 void Menu::updatePos(sf::Vector2f pos, float height) {
-	menu[0].update(pos.x - 60, pos.y - height / (ITEMS_COUNT * 2));
-	menu[1].update(pos.x - 55, pos.y);
-	menu[2].update(pos.x - 27, pos.y + height / (ITEMS_COUNT * 2));
+	menu[0].setPosition(pos.x - 60, pos.y - height / (ITEMS_COUNT * 2));
+	menu[1].setPosition(pos.x - 55, pos.y);
+	menu[2].setPosition(pos.x - 27, pos.y + height / (ITEMS_COUNT * 2));
 }
 
-void Menu::setSelectedItem(unsigned short index) {
+void Menu::setSelectedItem(sf::Uint8 index) {
 	menu[selectedItemIndex].setColor(sf::Color::White);
 	selectedItemIndex = index;
 	menu[selectedItemIndex].setColor(sf::Color::Red);

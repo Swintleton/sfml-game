@@ -1,5 +1,6 @@
 #pragma once
 #include "MenuItem.h"
+#include "Globals.h"
 
 #define ITEMS_COUNT 3
 
@@ -11,13 +12,13 @@ public:
 	void draw(sf::RenderWindow &) const;
 	void moveUp();
 	void moveDown();
-	void update(sf::RenderWindow &, sf::Event &);
+	bool update(sf::RenderWindow &);
 	void updatePos(sf::Vector2f, float);
-	void setSelectedItem(unsigned short index);
+	void setSelectedItem(sf::Uint8);
 
 	bool visible;
 private:
-	unsigned short selectedItemIndex;
+	sf::Uint8 selectedItemIndex;
 
 	std::vector<MenuItem> menu;
 };

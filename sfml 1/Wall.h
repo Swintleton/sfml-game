@@ -1,22 +1,24 @@
 #pragma once
-#ifndef SFML_GRAPHICS_H
-#define SFML_GRAPHICS_H
 #include <SFML/Graphics.hpp>
-#endif
 
 class Wall
 {
 public:
-	Wall(sf::Texture &, float, float, unsigned short);
+	unsigned int id;
+	sf::RectangleShape collisionRect;
+
+	//DIRECTIONS:
+	//	0	-	RIGHT
+	//	1	-	UP
+	//	2	-	UP RIGHT
+	//	3	-	UP LEFT
+	//	4	-	DOWN
+	//	5	-	DOWN RIGHT
+	//	6	-	DOWN LEFT
+	//	7	-	LEFT
+	sf::Uint8 direction;
+	sf::Sprite sprite;
+
+	Wall(unsigned int id, sf::Texture &, float x, float y, sf::Uint8 direction);
 	void draw(sf::RenderWindow &) const;
-
-	sf::RectangleShape collisionRect;		//ONLY FOR COLLISION
-	sf::Sprite getSprite() const;
-
-	bool beforePlayer;
-
-	enum directions { RIGHT, UP, UP_RIGHT, UP_LEFT, DOWN, DOWN_RIGHT, DOWN_LEFT, LEFT };
-	directions direction;
-private:
-	sf::Sprite wall;
 };

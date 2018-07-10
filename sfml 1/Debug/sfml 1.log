@@ -1,5 +1,1 @@
-﻿  Menu.cpp
-d:\saves\c++\sfml\sfml 1\sfml 1\menu.cpp(58): warning C4018: '>': signed/unsigned mismatch
-d:\saves\c++\sfml\sfml 1\sfml 1\menu.cpp(61): warning C4018: '>': signed/unsigned mismatch
-d:\saves\c++\sfml\sfml 1\sfml 1\menu.cpp(64): warning C4018: '>': signed/unsigned mismatch
-  sfml 1.vcxproj -> D:\Saves\C++\SFML\sfml 1\Debug\sfml 1.exe
+﻿  sfml 1.vcxproj -> D:\Saves\C++\SFML\sfml 1\Debug\sfml 1.exe

@@ -4,18 +4,16 @@
 class Animation
 {
 public:
-	Animation(float, float, unsigned short, float);
-
-	void update(unsigned int, sf::Texture &, sf::Sprite &, float &);
-	
-	~Animation(void);
-private:
 	unsigned short textureWidth;
 	unsigned short textureHeight;
+
+	Animation(float textureWidth, float textureHeight, unsigned short imageCount, float switchTime);
+	void setImageCount(unsigned short);
+	void setSwitchTime(float);
+	bool update(sf::Uint8, sf::Texture &, sf::Sprite &, float &);
+private:
 	unsigned short imageCount;
-
 	unsigned short currentImage;
-
 	float switchTime;
 	float totalTime;
 };

@@ -14,7 +14,7 @@ MenuItem::MenuItem(sf::Vector2f pos, sf::Vector2f size, sf::Font &font, char *bu
 	rc.setSize(size);
 }
 
-void MenuItem::update(float x, float y)
+void MenuItem::setPosition(float x, float y)
 {
 	text.setPosition(x, y);
 	rc.setPosition(x, y);
