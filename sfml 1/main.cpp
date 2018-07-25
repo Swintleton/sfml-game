@@ -2,9 +2,6 @@
 #include "Login.h"
 #include "Game.h"
 
-#define VIEW_WIDTH 	800.f
-#define VIEW_HEIGHT	600.f
-
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(static_cast<unsigned short>(VIEW_WIDTH), static_cast<unsigned short>(VIEW_HEIGHT)), "SFML 1", sf::Style::Default);

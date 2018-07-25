@@ -1,1 +1,43 @@
-﻿  sfml 1.vcxproj -> D:\Saves\C++\SFML\sfml 1\Debug\sfml 1.exe
+﻿  Menu.cpp
+  Generating Code...
+d:\saves\c++\sfml\sfml 1\sfml 1\menu.cpp(77): warning C4715: 'Menu::update': not all control paths return a value
+  Compiling...
+  main.cpp
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(157): warning C4244: 'initializing': conversion from 'const float' to 'sf::Int64', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(158): warning C4244: 'initializing': conversion from 'const float' to 'sf::Int64', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(162): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(179): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(200): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(293): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(301): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(315): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(328): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(335): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(398): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(417): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(450): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(528): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(585): warning C4244: 'argument': conversion from 'sf::Uint64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(601): warning C4244: 'argument': conversion from 'sf::Uint64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(638): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(640): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(641): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(642): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(643): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(644): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(670): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(673): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(704): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(759): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(778): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(798): warning C4244: 'argument': conversion from 'sf::Int64' to 'float', possible loss of data
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(940): warning C4129: '/': unrecognized character escape sequence
+d:\saves\c++\sfml\sfml 1\sfml 1\network.h(945): warning C4129: '/': unrecognized character escape sequence
+d:\saves\c++\sfml\sfml 1\sfml 1\login.h(13): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  Wall.cpp
+  Player.cpp
+  MessageBox.cpp
+  Inventory.cpp
+  sfml 1.vcxproj -> D:\Saves\C++\SFML\sfml 1\Debug\sfml 1.exe

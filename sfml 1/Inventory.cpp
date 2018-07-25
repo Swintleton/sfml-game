@@ -2,23 +2,23 @@
 #include "Inventory.h"
 
 Inventory::Inventory(sf::Vector2f pos)
-	: visible(false), OneItemisGrabbed(false), grabbedItem(0)
 {
-	for (unsigned short i = 0; i < inventoryX; ++i) {
-		for (unsigned short j = 0; j < inventoryY; ++j) {
-			freeSpace[i][j] = 1;
+	for (unsigned short i = 0; i < inventoryY; ++i) {
+		for (unsigned short j = 0; j < inventoryX; ++j) {
+			freeSpace[j][i] = 1;
 		}
 	}
 	sprite.setPosition(pos);
 	collisionRect.setPosition(pos);
+	visible = false;
 }
 
 void Inventory::draw(sf::RenderWindow &window) const {
 	window.draw(sprite);
 }
 
-bool Inventory::insert(Item *item) {
-	sf::Vector2i size(item->inventorySize);
+bool Inventory::insert(Item &item) {
+	sf::Vector2i size(item.inventorySize);
 	unsigned char untilY = (int)(inventoryY - size.y / 2 + 0.5);
 	unsigned char untilX = (int)(inventoryX - size.x / 2 + 0.5);
 
@@ -40,8 +40,8 @@ bool Inventory::insert(Item *item) {
 	return false;
 }
 
-bool Inventory::insert(Item *item, unsigned char *FreespacePos) {
-	unsigned char itemSizeX = item->inventorySize.x, itemSizeY = item->inventorySize.y;
+bool Inventory::insert(Item &item, unsigned char *FreespacePos) {
+	unsigned char itemSizeX = item.inventorySize.x, itemSizeY = item.inventorySize.y;
 
 	//The entire item fits in the inventory?
 	if (FreespacePos[0] + itemSizeX > inventoryX || FreespacePos[1] + itemSizeY > inventoryY)
@@ -59,14 +59,14 @@ bool Inventory::insert(Item *item, unsigned char *FreespacePos) {
 			freeSpace[x][y] = false;
 
 	//Item Add ItemList
-	item->inventoryPosition.x = FreespacePos[0];
-	item->inventoryPosition.y = FreespacePos[1];
-	item->inInventory = true;
-	item->grabbed = false;
-	item->collisionRect.setRotation(0);
+	item.inventoryPosition.x = FreespacePos[0];
+	item.inventoryPosition.y = FreespacePos[1];
+	item.inInventory = true;
+	item.grabbed = false;
+	item.collisionRect.setRotation(0);
 	OneItemisGrabbed = false;
-	item->setPosition(collisionRect.getPosition().x + 2 + item->inventoryPosition.x * 26 + item->inventoryPosition.x * 3, collisionRect.getPosition().y + 2 + item->inventoryPosition.y * 25 + item->inventoryPosition.y * 3);
-	itemList.push_back(item);
+	item.setPosition(collisionRect.getPosition().x + 2 + item.inventoryPosition.x * 26 + item.inventoryPosition.x * 3, collisionRect.getPosition().y + 2 + item.inventoryPosition.y * 25 + item.inventoryPosition.y * 3);
+	itemList.push_back(&item);
 	return true;
 }
 
@@ -91,16 +91,16 @@ unsigned char* Inventory::positionToCell(sf::Vector2f pos) {
 	return cell;
 }
 
-bool Inventory::repositioning(Item *item, unsigned char *FreespacePos) {
-	unsigned char itemSizeX = item->inventorySize.x, itemSizeY = item->inventorySize.y;
+bool Inventory::repositioning(Item &item, unsigned char *FreespacePos) {
+	unsigned char itemSizeX = item.inventorySize.x, itemSizeY = item.inventorySize.y;
 
 	//The entire item fits in the inventory?
 	if (FreespacePos[0] + itemSizeX > inventoryX || FreespacePos[1] + itemSizeY > inventoryY)
 		return false;
 
 	//Free up last position space
-	for (unsigned char y = item->inventoryPosition.y; y < item->inventoryPosition.y + itemSizeY; ++y)
-		for (unsigned char x = item->inventoryPosition.x; x < item->inventoryPosition.x + itemSizeX; ++x)
+	for (unsigned char y = item.inventoryPosition.y; y < item.inventoryPosition.y + itemSizeY; ++y)
+		for (unsigned char x = item.inventoryPosition.x; x < item.inventoryPosition.x + itemSizeX; ++x)
 			freeSpace[x][y] = true;
 
 	//At the position the space is free?
@@ -115,11 +115,11 @@ bool Inventory::repositioning(Item *item, unsigned char *FreespacePos) {
 			freeSpace[x][y] = false;
 
 	//Set new item position
-	item->inventoryPosition.x = FreespacePos[0];
-	item->inventoryPosition.y = FreespacePos[1];
-	item->grabbed = false;
+	item.inventoryPosition.x = FreespacePos[0];
+	item.inventoryPosition.y = FreespacePos[1];
+	item.grabbed = false;
 	OneItemisGrabbed = false;
-	item->setPosition(collisionRect.getPosition().x + 2 + item->inventoryPosition.x * 26 + item->inventoryPosition.x * 3, collisionRect.getPosition().y + 2 + item->inventoryPosition.y * 25 + item->inventoryPosition.y * 3);
+	item.setPosition(collisionRect.getPosition().x + 2 + item.inventoryPosition.x * 26 + item.inventoryPosition.x * 3, collisionRect.getPosition().y + 2 + item.inventoryPosition.y * 25 + item.inventoryPosition.y * 3);
 	return true;
 }
 
@@ -133,7 +133,7 @@ void Inventory::setPosition(sf::Vector2f pos) {
 	sprite.setPosition(pos);
 
 	for (Item *item : itemList)
-		if (item->inInventory && !item->grabbed && !item->equipped)
+		if (item->inInventory && !item->grabbed)
 			item->setPosition(collisionRect.getPosition().x + 2 + item->inventoryPosition.x * 26 + item->inventoryPosition.x * 3, collisionRect.getPosition().y + 2 + item->inventoryPosition.y * 25 + item->inventoryPosition.y * 3);
 }
 
@@ -142,7 +142,7 @@ void Inventory::setPosition(float x, float y) {
 	sprite.setPosition(x, y);
 
 	for (Item *item : itemList)
-		if (item->inInventory && !item->grabbed && !item->equipped)
+		if (item->inInventory && !item->grabbed)
 			item->setPosition(collisionRect.getPosition().x + 2 + item->inventoryPosition.x * 26 + item->inventoryPosition.x * 3, collisionRect.getPosition().y + 2 + item->inventoryPosition.y * 25 + item->inventoryPosition.y * 3);
 }
 
@@ -152,16 +152,20 @@ void Inventory::setVisible(bool visibility) {
 		item->visible = visibility;
 }
 
-void Inventory::takeOut(Item *item) {
-	item->grabbed = false;
+void Inventory::takeOut(Item &item) {
+	item.grabbed = false;
 	OneItemisGrabbed = false;
-	item->inInventory = false;
+	item.inInventory = false;
 
-	for (unsigned char y = item->inventoryPosition.y; y < item->inventoryPosition.y + item->inventorySize.y; ++y)
-		for (unsigned char x = item->inventoryPosition.x; x < item->inventoryPosition.x + item->inventorySize.x; ++x)
+	for (unsigned char y = item.inventoryPosition.y; y < item.inventoryPosition.y + item.inventorySize.y; ++y)
+		for (unsigned char x = item.inventoryPosition.x; x < item.inventoryPosition.x + item.inventorySize.x; ++x)
 			freeSpace[x][y] = true;
 
-	itemList.erase(std::remove(itemList.begin(), itemList.end(), item), itemList.end());
+	for(unsigned int i = 0; i < itemList.size(); ++i)
+		if (itemList[i]->id == item.id) {
+			itemList.erase(itemList.begin() + i);
+			return;
+		}
 }
 
 //returns:
@@ -193,7 +197,7 @@ unsigned char Inventory::update(sf::RenderWindow &window, sf::Vector2f playerPos
 		grabbedItem->owner = -1;
 
 		if (grabbedItem->inInventory) {
-			takeOut(grabbedItem);
+			takeOut(*grabbedItem);
 			return 1;
 		}
 		else {
@@ -208,13 +212,13 @@ unsigned char Inventory::update(sf::RenderWindow &window, sf::Vector2f playerPos
 	//Item was not in the inventory before grabbing
 	if (!grabbedItem->inInventory) {
 		//Insert new item into the inventory
-		if (insert(grabbedItem, positionToCell(MouseClick))) {
+		if (insert(*grabbedItem, positionToCell(MouseClick))) {
 			return 3;
 		}
 	}
 
 	//Repositioning inventory item
-	if (repositioning(grabbedItem, positionToCell(MouseClick))) {
+	if (repositioning(*grabbedItem, positionToCell(MouseClick))) {
 		return 4;
 	}
 	return 0;

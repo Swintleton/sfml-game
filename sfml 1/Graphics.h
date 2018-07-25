@@ -3,29 +3,29 @@
 
 void Move_Collison_Rects(void) {
 	unsigned int stepper = 0;
-	for (Wall *wal : walls) {
+	for (Wall &wall : walls) {
 		//PUT THE COLLISION RECT UP OR DOWN
-		if (player.collisionRect.getPosition().y < wal->collisionRect.getPosition().y + 30)	//the +30 only for change quicker
-			wal->collisionRect.setPosition(playerBeforeWall[stepper]);
-		if (player.collisionRect.getPosition().y > wal->collisionRect.getPosition().y - 30)
-			wal->collisionRect.setPosition(playerBehindWall[stepper]);
+		if (player.collisionRect.getPosition().y < wall.collisionRect.getPosition().y + 30)	//the +30 only for change quicker
+			wall.collisionRect.setPosition(playerBeforeWall[stepper]);
+		if (player.collisionRect.getPosition().y > wall.collisionRect.getPosition().y - 30)
+			wall.collisionRect.setPosition(playerBehindWall[stepper]);
 		++stepper;
 	}
 }
 
 void Drawing(sf::RenderWindow &window, Inventory &inventory, Menu &menu, sf::View &view, sf::View &view2) {
 	//Draw Safezones
-	for (Safezone *s : safezones)
-		s->draw(window);
+	for (Safezone &s : safezones)
+		s.draw(window);
 
 	//Draw Regenerators
-	for (Regenerator *r : regenerators)
-		r->draw(window);
+	for (Regenerator &r : regenerators)
+		r.draw(window);
 
 	//Draw items on the ground
-	for (Item *item : items) {
-		if(item->visible && !item->inInventory && !item->grabbed && !item->equipped && item->owner == -1)
-			item->draw(window);
+	for (Item &item : items) {
+		if(item.visible && !item.inInventory && !item.grabbed && !item.equipped && item.owner == -1)
+			item.draw(window);
 	}
 
 	//Store all Y positions and sprites
@@ -37,35 +37,35 @@ void Drawing(sf::RenderWindow &window, Inventory &inventory, Menu &menu, sf::Vie
 
 	//Add Walls
 	DrawList.reserve(sizeof(Wall) * walls.size());
-	for (Wall *wal : walls)
-		DrawList.emplace_back(std::make_pair(wal->sprite.getPosition().y, &wal->sprite));
+	for (Wall &wall : walls)
+		DrawList.emplace_back(std::make_pair(wall.sprite.getPosition().y, &wall.sprite));
 
 	//Add Online Players
 	DrawList.reserve(sizeof(Online_Player) * OPlayers.size());
-	for (Online_Player *op : OPlayers)
-		DrawList.emplace_back(std::make_pair(op->collisionRect.getPosition().y, &op->sprite));
+	for (Online_Player &op : OPlayers)
+		DrawList.emplace_back(std::make_pair(op.collisionRect.getPosition().y, &op.sprite));
 
 	//Add Daemons
 	DrawList.reserve(sizeof(Daemon) * daemons.size());
-	for (Daemon *d : daemons)
-		DrawList.emplace_back(std::make_pair(d->collisionRect.getPosition().y, &d->sprite));
+	for (Daemon &d : daemons)
+		DrawList.emplace_back(std::make_pair(d.collisionRect.getPosition().y, &d.sprite));
 	//------------------------------------------------------------------------------------------
 
 	//Sort them by Y coordinates
 	std::sort(DrawList.begin(), DrawList.end());
 
 	//Draw them
-	for (std::pair<const float, const sf::Sprite *> a : DrawList)
+	for (std::pair<float, sf::Sprite *> a : DrawList)
 		window.draw(*a.second);
 
 	//Draw HealthBars
-	for (Online_Player *op : OPlayers) {
-		op->healthBar.draw(window);
-		op->manaBar.draw(window);
+	for (Online_Player &op : OPlayers) {
+		op.healthBar.draw(window);
+		op.manaBar.draw(window);
 	}
-	for (Daemon *d : daemons) {
-		d->healthBar.draw(window);
-		d->manaBar.draw(window);
+	for (Daemon &d : daemons) {
+		d.healthBar.draw(window);
+		d.manaBar.draw(window);
 	}
 
 	window.setView(view2);
@@ -88,16 +88,16 @@ void Drawing(sf::RenderWindow &window, Inventory &inventory, Menu &menu, sf::Vie
 		inventory.draw(window);
 
 		//Draw Items in inventory
-		for (Item *item : items) {
-			if (item->visible && !item->grabbed && item->inInventory && item->owner == player.id)
-				item->draw(window);
+		for (Item &item : items) {
+			if (item.visible && !item.grabbed && item.inInventory && item.owner == player.id)
+				item.draw(window);
 		}
 	}
 
 	//Draw Grabbed items
-	for (Item *item : items) {
-		if (item->visible && item->grabbed)
-			item->draw(window);
+	for (Item &item : items) {
+		if (item.visible && item.grabbed)
+			item.draw(window);
 	}
 
 	if (dieMessage.visible) {

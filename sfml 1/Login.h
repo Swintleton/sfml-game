@@ -4,13 +4,16 @@
 #include "Button_K.h"
 #include <regex>
 
-#define VIEW_WIDTH 	800.f
-#define VIEW_HEIGHT	600.f
+static unsigned short VIEW_WIDTH = 800;
+static unsigned short VIEW_HEIGHT = 600;
 
 bool Run_Login(sf::RenderWindow &window, sf::Thread *thread_Receive)
 {
+	sf::View view(sf::Vector2f(player.sprite.getPosition().x, player.sprite.getPosition().y), sf::Vector2f(VIEW_WIDTH, VIEW_HEIGHT));
+	view.setCenter(window.getSize().x / 2, window.getSize().y / 2);
+	window.setView(view);
+
 	socket.disconnect();
-	window.setView(window.getDefaultView());
 	sf::Font font;
 	if (!font.loadFromFile("Fonts/arial.ttf")) {
 		std::cout << "Can not load Fonts/arial.ttf" << std::endl;
@@ -29,6 +32,7 @@ bool Run_Login(sf::RenderWindow &window, sf::Thread *thread_Receive)
 	globalMutex.lock();
 	quit = false;
 	login = false;
+	ready = false;
 	globalMutex.unlock();
 
 	while (window.isOpen() && !login)

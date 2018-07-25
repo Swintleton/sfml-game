@@ -107,7 +107,6 @@ Item::Item(unsigned int _id, int _owner, unsigned short _type, bool _visible, bo
 		collisionRect.setSize(sf::Vector2f(sprite.getLocalBounds().height / inventorySize.y, text.getGlobalBounds().width));
 		text.setPosition(collisionRect.getPosition().x - collisionRect.getLocalBounds().height, collisionRect.getPosition().y + 4);
 	}
-	//collisionRect.setSize(sf::Vector2f(sprite.getLocalBounds().width / inventorySize.x, sprite.getLocalBounds().height));//inventorySize.x*24
 
 	collisionRect.setFillColor(sf::Color(0,0,0,150));
 	collisionRect.setPosition(x, y);

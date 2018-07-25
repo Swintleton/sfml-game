@@ -3,15 +3,12 @@
 #include "Menu.h"
 #include "Graphics.h"
 #include "FpsCounter.h"
-
-#define VIEW_WIDTH 	800.f
-#define VIEW_HEIGHT	600.f
-
 #include "Initialization.h"
 
 bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 	sf::View view(sf::Vector2f(player.sprite.getPosition().x, player.sprite.getPosition().y), sf::Vector2f(VIEW_WIDTH, VIEW_HEIGHT));
 	sf::View view2(sf::Vector2f(player.sprite.getPosition().x, player.sprite.getPosition().y), sf::Vector2f(VIEW_WIDTH, VIEW_HEIGHT));
+	view2.setCenter(0, 0);
 	window.setView(view);
 
 	Load_Graphics_Elements(resource);
@@ -25,15 +22,19 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 	sf::Clock clock;
 	sf::Event event;
 
-	bool updateHapped = false;
+	bool updateHappened = false;
 
 	sf::Vector2f pos;
 	//-----------------------------------------------------------------------------------------------------------
 
+	if (!ready) {
+		sf::sleep(sf::milliseconds(100));
+	}
+
 	while (window.isOpen())
 	{
 		if (quit && !login) {
-			Clear_Game();
+			LogOut(thread_Receive);
 			return true;
 		}
 
@@ -41,6 +42,7 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 
 		deltaTime = clock.restart().asSeconds();
 
+		Move_Collison_Rects();
 		if (!player.dead) {
 			//player moved?
 			if (window.hasFocus() && !messageBox.selected && player.move(deltaTime, walls)) {
@@ -71,28 +73,28 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 		}
 
 		//update online players
-		for (Online_Player *op : OPlayers) {
-			if (!op->dead) {
-				op->move(deltaTime);
-				op->attack(deltaTime);
-				op->beenHit(deltaTime);
+		for (Online_Player &op : OPlayers) {
+			if (!op.dead) {
+				op.move(deltaTime);
+				op.attack(deltaTime);
+				op.beenHit(deltaTime);
 			}
 			else {
-				op->die(deltaTime);
+				op.die(deltaTime);
 			}
 		}
 
 		//update daemons
-		for (Daemon *d : daemons) {
-			if (!d->dead) {
-				if (!d->doMove)
-					d->notMovedTime += deltaTime;
-				d->move(deltaTime);
-				d->attack(deltaTime);
-				d->beenHit(deltaTime);
+		for (Daemon &d : daemons) {
+			if (!d.dead) {
+				if (!d.doMove)
+					d.notMovedTime += deltaTime;
+				d.move(deltaTime);
+				d.attack(deltaTime);
+				d.beenHit(deltaTime);
 			}
 			else {
-				d->die(deltaTime);
+				d.die(deltaTime);
 			}
 		}
 
@@ -101,6 +103,7 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 
 		fpsCounter.update(deltaTime);
 
+		updateHappened = false;
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 			case sf::Event::Closed:
@@ -164,19 +167,20 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 				if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
 					break;
 
-				updateHapped = false;
 				if (inventory.visible) {
 					unsigned char inventory_update = inventory.update(window, player.collisionRect.getPosition());
 					if (inventory_update == 0) {
 						//Nothing happened in the inventory
-						for (Item *item : items) {
-							if (item->update(window, 1, player.collisionRect.getPosition()) == 1) {
+						for (Item &item : items) {
+							if (item.update(window, 1, player.collisionRect.getPosition()) == 1) {
 								//Grab item
+								globalMutex.lock();
 								inventory.OneItemisGrabbed = true;
-								inventory.grabbedItem = item;
-								Send_Grab_Request(item);
+								inventory.grabbedItem = &item;
+								Send_Grab_Request(*inventory.grabbedItem);
 								inventory.grabbedItem->setNonGroundPosition();
-								updateHapped = true;
+								updateHappened = true;
+								globalMutex.unlock();
 								break;
 							}
 						}
@@ -184,43 +188,43 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 					else if (inventory_update == 1) {
 						//item taked out
 						inventory.grabbedItem->owner = -1;
-						Send_Take_Out_Request(inventory.grabbedItem);
-						updateHapped = true;
+						Send_Take_Out_Request(*inventory.grabbedItem);
+						updateHappened = true;
 						break;
 					}
 					else if (inventory_update == 2) {
 						//item released
 						inventory.grabbedItem->owner = -1;
-						Send_Release_Request(inventory.grabbedItem);
-						updateHapped = true;
+						Send_Release_Request(*inventory.grabbedItem);
+						updateHappened = true;
 						break;
 					}
 					else if (inventory_update == 3) {
 						//item inserted
 						inventory.grabbedItem->owner = player.id;
-						Send_Insert_Request(inventory.grabbedItem);
+						Send_Insert_Request(*inventory.grabbedItem);
 						inventory.grabbedItem->setNonGroundPosition();
-						updateHapped = true;
+						updateHappened = true;
 						break;
 					}
 					else if (inventory_update == 4) {
 						//item repositioned
-						Send_Repositioning_Request(inventory.grabbedItem);
+						Send_Repositioning_Request(*inventory.grabbedItem);
 						inventory.grabbedItem->setNonGroundPosition();
-						updateHapped = true;
+						updateHappened = true;
 						break;
 					}
 				}
 				else if (!inventory.OneItemisGrabbed) {
-					for (Item *item : items)
-						if (item->update(window, 0, player.collisionRect.getPosition()) == 2)
+					for (Item &item : items)
+						if (item.update(window, 0, player.collisionRect.getPosition()) == 2)
 							//Auto insert item
 							if (inventory.insert(item)) {
-								item->visible = false;
-								item->owner = player.id;
-								updateHapped = true;
+								item.visible = false;
+								item.owner = player.id;
+								updateHappened = true;
 								Send_Auto_Inserting_Request(item);
-								item->setNonGroundPosition();
+								item.setNonGroundPosition();
 								break;
 							}
 				}
@@ -229,9 +233,20 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 
 			if (window.hasFocus()) {
 				//Update menu
-				if (menu.visible)
-					if(menu.update(window))
-						updateHapped = true;
+				if (menu.visible) {
+					sf::Uint8 menuUpdate = menu.update(window);
+					switch (menuUpdate) {
+						case 1:
+							updateHappened = true;
+							break;
+						case 2:
+							updateHappened = true;
+							break;
+						case 3:
+							LogOut(thread_Receive);
+							return true;
+					}
+				}
 
 				//Update chat
 				if (messageBox.update(window, event) && !Command(messageBox.sendMsg)) {
@@ -242,38 +257,39 @@ bool Run_Game(sf::RenderWindow &window, sf::Thread *thread_Receive){
 
 					messageList.addMessage(fullMsg);
 					Send_Message(messageBox.sendMsg);
-					updateHapped = true;
+					updateHappened = true;
 				}
 				messageList.update(window, event.text.unicode);
-			
-				//User actions
-				if (!updateHapped && !messageBox.selected && !messageList.selected) {
-					if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-						player.doAttack = true;
-						Send_Attack_Request();
-					}
-				}
 			}
 		}
-		//Grabbed item set to mouse position
-		if (inventory.OneItemisGrabbed && inventory.grabbedItem->grabbed)
-			inventory.grabbedItem->sprite.setPosition(static_cast<sf::Vector2f>((window.mapPixelToCoords(sf::Mouse::getPosition(window)))));
+		if (window.hasFocus()) {
+			//User actions
+			if (!updateHappened && !messageBox.selected && !messageList.selected) {
+				if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+					player.doAttack = true;
+					Send_Attack_Request();
+				}
+			}
 
-		//Mouse hovered bars
-		if (player.healthBar.hovered(window)) {
-			player.healthBar.setText(player.getHealth());
-			player.manaBar.setText("");
-		}
-		else if (player.manaBar.hovered(window)) {
-			player.manaBar.setText(player.getMana());
-			player.healthBar.setText("");
-		}
-		else {
-			player.healthBar.setText("");
-			player.manaBar.setText("");
+			//Grabbed item set to mouse position
+			if (inventory.OneItemisGrabbed && inventory.grabbedItem->grabbed)
+				inventory.grabbedItem->sprite.setPosition(static_cast<sf::Vector2f>((window.mapPixelToCoords(sf::Mouse::getPosition(window)))));
+
+			//Mouse hovered bars
+			if (player.healthBar.hovered(window)) {
+				player.healthBar.setText(player.getHealth());
+				player.manaBar.setText("");
+			}
+			else if (player.manaBar.hovered(window)) {
+				player.manaBar.setText(player.getMana());
+				player.healthBar.setText("");
+			}
+			else {
+				player.healthBar.setText("");
+				player.manaBar.setText("");
+			}
 		}
 
-		Move_Collison_Rects();
 		Drawing(window, inventory, menu, view, view2);
 
 		window.display();

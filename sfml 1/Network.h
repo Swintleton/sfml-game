@@ -81,55 +81,55 @@ void Send_Attack_Request() {
 	socket.send(packet);
 }
 
-void Send_Grab_Request(Item *item) {
+void Send_Grab_Request(Item &item) {
 	sf::Packet packet;
 	packet << Item_Grabbed;
-	packet << item->id;
+	packet << item.id;
 	socket.send(packet);
 }
 
-void Send_Release_Request(Item *item) {
+void Send_Release_Request(Item &item) {
 	sf::Packet packet;
 	packet << Item_Released;
-	packet << item->id;
-	packet << static_cast<sf::Int64>(item->collisionRect.getPosition().x);
-	packet << static_cast<sf::Int64>(item->collisionRect.getPosition().y);
+	packet << item.id;
+	packet << static_cast<sf::Int64>(item.collisionRect.getPosition().x);
+	packet << static_cast<sf::Int64>(item.collisionRect.getPosition().y);
 	socket.send(packet);
 }
 
-void Send_Take_Out_Request(Item *item) {
+void Send_Take_Out_Request(Item &item) {
 	sf::Packet packet;
 	packet << Item_Take_Out;
-	packet << item->id;
-	packet << static_cast<sf::Int64>(item->collisionRect.getPosition().x);
-	packet << static_cast<sf::Int64>(item->collisionRect.getPosition().y);
+	packet << item.id;
+	packet << static_cast<sf::Int64>(item.collisionRect.getPosition().x);
+	packet << static_cast<sf::Int64>(item.collisionRect.getPosition().y);
 	socket.send(packet);
 }
 
-void Send_Insert_Request(Item *item) {
+void Send_Insert_Request(Item &item) {
 	sf::Packet packet;
 	packet << Item_inInventory;
-	packet << item->id;
-	packet << static_cast<unsigned char>(item->inventoryPosition.x);
-	packet << static_cast<unsigned char>(item->inventoryPosition.y);
+	packet << item.id;
+	packet << static_cast<unsigned char>(item.inventoryPosition.x);
+	packet << static_cast<unsigned char>(item.inventoryPosition.y);
 	socket.send(packet);
 }
 
-void Send_Auto_Inserting_Request(Item *item) {
+void Send_Auto_Inserting_Request(Item &item) {
 	sf::Packet packet;
 	packet << Item_Auto_Insert;
-	packet << item->id;
-	packet << static_cast<unsigned char>(item->inventoryPosition.x);
-	packet << static_cast<unsigned char>(item->inventoryPosition.y);
+	packet << item.id;
+	packet << static_cast<unsigned char>(item.inventoryPosition.x);
+	packet << static_cast<unsigned char>(item.inventoryPosition.y);
 	socket.send(packet);
 }
 
-void Send_Repositioning_Request(Item *item) {
+void Send_Repositioning_Request(Item &item) {
 	sf::Packet packet;
 	packet << Item_Repositioning;
-	packet << item->id;
-	packet << static_cast<unsigned char>(item->inventoryPosition.x);
-	packet << static_cast<unsigned char>(item->inventoryPosition.y);
+	packet << item.id;
+	packet << static_cast<unsigned char>(item.inventoryPosition.x);
+	packet << static_cast<unsigned char>(item.inventoryPosition.y);
 	socket.send(packet);
 }
 
@@ -169,15 +169,15 @@ void move_Online_Player(sf::Packet &packet) {
 	sf::Uint8 direction = 0;
 	packet >> id >> x >> y >> direction;
 
-	for (Online_Player *op : OPlayers) {
+	for (Online_Player &op : OPlayers) {
 		//Find which one moved
-		if (op->id == id) {
+		if (op.id == id) {
 			globalMutex.lock();
 			//Do animation
-			op->doMove = true;
+			op.doMove = true;
 			//Set new position
-			op->setPosition(x, y);
-			op->setDirection(direction);
+			op.setPosition(x, y);
+			op.setDirection(direction);
 			globalMutex.unlock();
 			return;
 		}
@@ -190,15 +190,15 @@ void move_Daemon(sf::Packet &packet) {
 	sf::Uint8 direction = 0;
 	packet >> id >> x >> y >> direction;
 
-	for (Daemon *d : daemons)
+	for (Daemon &d : daemons)
 		//Find which one moved
-		if (d->id == id) {
+		if (d.id == id) {
 			globalMutex.lock();
 			//Do animation
-			d->doMove = true;
+			d.doMove = true;
 			//Set new position
-			d->setPosition(x, y);
-			d->setDirection(direction);
+			d.setPosition(x, y);
+			d.setDirection(direction);
 			globalMutex.unlock();
 		}
 }
@@ -207,12 +207,12 @@ void attack_Online_Player(sf::Packet &packet) {
 	unsigned int id;
 	packet >> id;
 
-	for (Online_Player *op : OPlayers)
+	for (Online_Player &op : OPlayers)
 		//Find which one attacked
-		if (op->id == id) {
+		if (op.id == id) {
 			//Do animation
 			globalMutex.lock();
-			op->doAttack = true;
+			op.doAttack = true;
 			globalMutex.unlock();
 		}
 }
@@ -221,11 +221,11 @@ void attack_Daemon(sf::Packet &packet) {
 	unsigned int id;
 	packet >> id;
 
-	for (Daemon *d : daemons)
+	for (Daemon &d : daemons)
 		//Find which one attacked
-		if (d->id == id) {
+		if (d.id == id) {
 			//Do animation
-			d->doAttack = true;
+			d.doAttack = true;
 		}
 }
 
@@ -245,14 +245,14 @@ void die_Player(sf::Packet &packet) {
 		return;
 	}
 
-	for (Online_Player *op : OPlayers) {
-		if (op->id == id) {
-			op->dead = true;
-			op->doDie = true;
+	for (Online_Player &op : OPlayers) {
+		if (op.id == id) {
+			op.dead = true;
+			op.doDie = true;
 
-			op->sprite.setOrigin(64, 64);
-			op->animation.textureWidth = 128;
-			op->animation.textureHeight = 128;
+			op.sprite.setOrigin(64, 64);
+			op.animation.textureWidth = 128;
+			op.animation.textureHeight = 128;
 			return;
 		}
 	}
@@ -262,11 +262,11 @@ void die_Daemon(sf::Packet &packet) {
 	unsigned int id;
 	packet >> id;
 
-	for(Daemon *d : daemons)
-		if (d->id == id) {
+	for(Daemon &d : daemons)
+		if (d.id == id) {
 			globalMutex.lock();
-			d->dead = true;
-			d->doDie = true;
+			d.dead = true;
+			d.doDie = true;
 			globalMutex.unlock();
 		}
 }
@@ -275,10 +275,10 @@ void delete_Daemon(sf::Packet &packet) {
 	unsigned int id;
 	packet >> id;
 
-	for (Daemon *d : daemons) 
-		if (d->id == id) {
+	for(unsigned int i = 0; i < daemons.size(); ++i)
+		if (daemons[i].id == id) {
 			globalMutex.lock();
-			daemons.erase(std::remove(daemons.begin(), daemons.end(), d), daemons.end());
+			daemons.erase(daemons.begin() + i);
 			globalMutex.unlock();
 		}
 }
@@ -295,11 +295,11 @@ void damage_Taken_Player(sf::Packet &packet) {
 		return;
 	}
 
-	for (Online_Player *op : OPlayers)
+	for (Online_Player &op : OPlayers)
 		//Find which one taken damage
-		if (op->id == id) {
-			op->decreaseHealthBy(dmg);
-			op->doBeenHit = true;
+		if (op.id == id) {
+			op.decreaseHealthBy(dmg);
+			op.doBeenHit = true;
 			return;
 		}
 }
@@ -309,11 +309,11 @@ void damage_Taken_Daemon(sf::Packet &packet) {
 	sf::Int64 dmg = 0;
 	packet >> id >> dmg;
 
-	for (Daemon *d : daemons)
+	for (Daemon &d : daemons)
 		//Find which one taken damage
-		if (d->id == id) {
-			d->decreaseHealthBy(dmg);
-			d->doBeenHit = true;
+		if (d.id == id) {
+			d.decreaseHealthBy(dmg);
+			d.doBeenHit = true;
 			return;
 		}
 }
@@ -329,10 +329,10 @@ void healed_Player(sf::Packet &packet) {
 		return;
 	}
 
-	for (Online_Player *op : OPlayers)
+	for (Online_Player &op : OPlayers)
 		//Find which one take the heal
-		if (op->id == id) {
-			op->increaseHealthBy(heal);
+		if (op.id == id) {
+			op.increaseHealthBy(heal);
 			return;
 		}
 }
@@ -341,18 +341,18 @@ void Online_Player_Running(sf::Packet &packet) {
 	unsigned int id = 0;
 	packet >> id;
 
-	for (Online_Player *op : OPlayers)
-		if (op->id == id)
-			op->setRunning(true);
+	for (Online_Player &op : OPlayers)
+		if (op.id == id)
+			op.setRunning(true);
 }
 
 void Online_Player_Walking(sf::Packet &packet) {
 	unsigned int id = 0;
 	packet >> id;
 
-	for (Online_Player *op : OPlayers)
-		if (op->id == id)
-			op->setRunning(false);
+	for (Online_Player &op : OPlayers)
+		if (op.id == id)
+			op.setRunning(false);
 }
 
 void update_Item_Grabbed(sf::Packet &packet) {
@@ -360,22 +360,22 @@ void update_Item_Grabbed(sf::Packet &packet) {
 	unsigned int owner = 0;
 	packet >> id >> owner;
 
-	for (Item *item : items) {
+	for (Item &item : items) {
 		//Find which one to update
-		if (item->id == id) {
+		if (item.id == id) {
 			//Set new grabbed
 			globalMutex.lock();
 			//If you grabbed
 			if (owner == player.id) {
-				item->setNonGroundPosition();
-				item->grabbed = true;
+				item.setNonGroundPosition();
+				item.grabbed = true;
 				if (inventory.OneItemisGrabbed) {
 					//This is a problem
 				}
 				inventory.OneItemisGrabbed = true;
-				inventory.grabbedItem = item;
+				inventory.grabbedItem = &item;
 			}
-			item->owner = owner;
+			item.owner = owner;
 			globalMutex.unlock();
 			break;
 		}
@@ -387,15 +387,15 @@ void update_Item_Released(sf::Packet &packet) {
 	sf::Int64 x = 0, y = 0;
 	packet >> id >> x >> y;
 
-	for (Item *item : items) {
-		if (item->id == id) {
+	for (Item &item : items) {
+		if (item.id == id) {
 			//Set new grabbed
 			globalMutex.lock();
-			item->owner = -1;
-			item->inInventory = false;
-			item->equipped = false;
-			item->grabbed = false;
-			item->setPosition(x, y);
+			item.owner = -1;
+			item.inInventory = false;
+			item.equipped = false;
+			item.grabbed = false;
+			item.setPosition(x, y);
 			globalMutex.unlock();
 			break;
 		}
@@ -407,14 +407,14 @@ void item_Grabbing_Failed(sf::Packet &packet) {
 	sf::Int64 x = 0, y = 0;
 	packet >> id >> x >> y;
 
-	for (Item *item : items) {
-		if (item->id == id) {
+	for (Item &item : items) {
+		if (item.id == id) {
 			globalMutex.lock();
-			item->grabbed = false;
+			item.grabbed = false;
 			inventory.OneItemisGrabbed = false;
-			item->owner = -1;
-			item->collisionRect.setRotation(90);
-			item->setPosition(x, y);
+			item.owner = -1;
+			item.collisionRect.setRotation(90);
+			item.setPosition(x, y);
 			globalMutex.unlock();
 			break;
 		}
@@ -425,11 +425,11 @@ void item_Inserting_Failed(sf::Packet &packet) {
 	unsigned int id = 0;
 	packet >> id;
 
-	for (Item *item : items) {
-		if (item->id == id) {
+	for (Item &item : items) {
+		if (item.id == id) {
 			globalMutex.lock();
 			inventory.takeOut(item);
-			item->grabbed = true;
+			item.grabbed = true;
 			inventory.OneItemisGrabbed = true;
 			globalMutex.unlock();
 			break;
@@ -442,14 +442,14 @@ void Item_Auto_Inserting_Failed(sf::Packet &packet) {
 	sf::Int64 x = 0, y = 0;
 	packet >> id >> x >> y;
 
-	for (Item *item : items) {
-		if (item->id == id) {
+	for (Item &item : items) {
+		if (item.id == id) {
 			globalMutex.lock();
 			inventory.takeOut(item);
-			item->setGroundPosition();
-			item->setPosition(x, y);
-			item->owner = -1;
-			item->visible = true;
+			item.setGroundPosition();
+			item.setPosition(x, y);
+			item.owner = -1;
+			item.visible = true;
 			globalMutex.unlock();
 			break;
 		}
@@ -460,12 +460,12 @@ void item_Releasing_Failed(sf::Packet &packet) {
 	unsigned int id = 0;
 	packet >> id;
 
-	for (Item *item : items) {
-		if (item->id == id) {
+	for (Item &item : items) {
+		if (item.id == id) {
 			globalMutex.lock();
-			item->grabbed = true;
+			item.grabbed = true;
 			inventory.OneItemisGrabbed = true;
-			item->owner = player.id;
+			item.owner = player.id;
 			globalMutex.unlock();
 			break;
 		}
@@ -477,13 +477,13 @@ void item_Takeing_Out_Failed(sf::Packet &packet) {
 	unsigned char cell[2] = {0, 0};
 	packet >> id >> cell[0] >> cell[1];
 
-	for (Item *item : items) {
-		if (item->id == id) {
+	for (Item &item : items) {
+		if (item.id == id) {
 			globalMutex.lock();
-			item->grabbed = true;
+			item.grabbed = true;
 			inventory.OneItemisGrabbed = true;
 			inventory.insert(item, cell);
-			item->owner = player.id;
+			item.owner = player.id;
 			globalMutex.unlock();
 			break;
 		}
@@ -495,8 +495,8 @@ void item_Repositioning_Failed(sf::Packet &packet) {
 	unsigned char cell[2] = { 0, 0 };
 	packet >> id >> cell[0] >> cell[0];
 
-	for (Item *item : items) {
-		if (item->id == id) {
+	for (Item &item : items) {
+		if (item.id == id) {
 			globalMutex.lock();
 			inventory.takeOut(item);
 			inventory.insert(item, cell);
@@ -525,7 +525,7 @@ void add_Online_Player(sf::Packet &packet) {
 	globalMutex.lock();
 	if (packet >> id >> name >> dead >> running >> speed >> attackSpeed >> maxHealth >> health >> maxMana >> mana >> x >> y >> direction) {
 		attackspeed = (float)attackSpeed / 100 - 0.21f;
-		OPlayers.push_back(new Online_Player(id, name, dead, running, speed, attackspeed, maxHealth, health, maxMana, mana, x, y, direction, resource.texture_Player_Stopped, resource.texture_Player_Walking, resource.texture_Player_Combat_Attack, resource.texture_Player_Combat_Been_Hit, resource.texture_Player_Combat_Die, resource.texture_Player_Combat_Running, resource.texture_Player_Combat_Stopped, resource.texture_Player_Combat_Walking, resource.texture_Rect_Health_Bar, resource.texture_Rect_Mana_Bar, resource.font, resource.texture_Empty));
+		OPlayers.push_back(Online_Player(id, name, dead, running, speed, attackspeed, maxHealth, health, maxMana, mana, x, y, direction, resource.texture_Player_Stopped, resource.texture_Player_Walking, resource.texture_Player_Combat_Attack, resource.texture_Player_Combat_Been_Hit, resource.texture_Player_Combat_Die, resource.texture_Player_Combat_Running, resource.texture_Player_Combat_Stopped, resource.texture_Player_Combat_Walking, resource.texture_Rect_Health_Bar, resource.texture_Rect_Mana_Bar, resource.font, resource.texture_Empty));
 	}
 	globalMutex.unlock();
 }
@@ -544,26 +544,25 @@ void add_Item(sf::Packet &packet) {
 
 	globalMutex.lock();
 	if (packet >> id >> owner >> type >> visible >> equipped >> grabbed >> inInventory >> inventoryPositionX >> inventoryPositionY >> x >> y) 
-		items.push_back(new Item(id, owner, type, visible, equipped, grabbed, inInventory, inventoryPositionX, inventoryPositionY, (float)x, (float)y, resource));
+		items.push_back(Item(id, owner, type, visible, equipped, grabbed, inInventory, inventoryPositionX, inventoryPositionY, (float)x, (float)y, resource));
 	globalMutex.unlock();
 
 	//Put your item into your inventory
-	if (items.back()->owner == player.id)
-		inventory.itemList.push_back(items.back());
+	if (items.back().owner == player.id)
+		inventory.itemList.push_back(&items.back());
 }
 
 bool delete_Online_Player(sf::Packet &packet) {
 	unsigned int id = 0;
 	packet >> id;
 
-	for (Online_Player *op : OPlayers) {
-		if (op->id == id) {
+	for (unsigned int i = 0; i < OPlayers.size(); ++i)
+		if (OPlayers[i].id == id) {
 			globalMutex.lock();
-			OPlayers.erase(std::remove(OPlayers.begin(), OPlayers.end(), op), OPlayers.end());
+			OPlayers.erase(OPlayers.begin() + i);
 			globalMutex.unlock();
 			return true;
 		}
-	}
 	return false;
 }
 
@@ -594,16 +593,16 @@ void respawn_Player(sf::Packet &packet) {
 				inventory.setPosition(player.getSprite().getPosition().x + 80, player.getSprite().getPosition().y);
 			return;
 		}
-		for (Online_Player *op : OPlayers) {
-			if (op->id == id) {
-				op->dead = false;
-				op->setHealth(health);
-				op->setMana(mana);
-				op->setPosition(x, y);
+		for (Online_Player &op : OPlayers) {
+			if (op.id == id) {
+				op.dead = false;
+				op.setHealth(health);
+				op.setMana(mana);
+				op.setPosition(x, y);
 
-				op->sprite.setOrigin(48, 48);
-				op->animation.textureWidth = 96;
-				op->animation.textureHeight = 96;
+				op.sprite.setOrigin(48, 48);
+				op.animation.textureWidth = 96;
+				op.animation.textureHeight = 96;
 				return;
 			}
 		}
@@ -658,24 +657,23 @@ void create_Walls(sf::Packet &packet) {
 	playerBehindWall.clear();
 	globalMutex.unlock();
 
+	unsigned int id = 0;
+	sf::Int64 x = 0, y = 0;
+	sf::Uint8 direction = 0;
+
 	walls.reserve(sizeof(Wall) * (packet.getDataSize() / 21));
-	playerBeforeWall.reserve(sizeof(playerBeforeWall) * (packet.getDataSize() / 20));
-	playerBehindWall.reserve(sizeof(playerBehindWall) * (packet.getDataSize() / 20));
+	playerBeforeWall.reserve(sizeof(playerBeforeWall) * (packet.getDataSize() / 21));
+	playerBehindWall.reserve(sizeof(playerBehindWall) * (packet.getDataSize() / 21));
 
-	for (unsigned int i = 2; i < packet.getDataSize(); i += 21) {
-		unsigned int id = 0;
-		sf::Int64 x = 0, y = 0;
-		sf::Uint8 direction = 0;
-		packet >> id >> x >> y >> direction;
-
+	while (packet >> id >> x >> y >> direction) {
 		if (direction == 4)
-			walls.emplace_back(new Wall(id, resource.texture_Wall_1, x, y, direction));
+			walls.emplace_back(Wall(id, resource.texture_Wall_1, x, y, direction));
 
 		else if (direction == 7)
-			walls.emplace_back(new Wall(id, resource.texture_Wall_0, x, y, direction));
+			walls.emplace_back(Wall(id, resource.texture_Wall_0, x, y, direction));
 
-		playerBeforeWall.emplace_back(sf::Vector2f(walls.back()->collisionRect.getPosition().x, walls.back()->collisionRect.getPosition().y + 50));
-		playerBehindWall.emplace_back(walls.back()->collisionRect.getPosition());
+		playerBeforeWall.emplace_back(sf::Vector2f(walls.back().collisionRect.getPosition().x, walls.back().collisionRect.getPosition().y + 50));
+		playerBehindWall.emplace_back(walls.back().collisionRect.getPosition());
 	}
 }
 
@@ -703,7 +701,7 @@ void create_Online_Players(sf::Packet &packet) {
 
 	while (packet >> id >> name >> dead >> running >> speed >> attackSpeed >> maxHealth >> health >> maxMana >> mana >> x >> y >> direction) {
 		attackspeed = (float)attackSpeed / 100 - 0.21f;
-		OPlayers.emplace_back(new Online_Player(id, name, dead, running, speed, attackspeed, maxHealth, health, maxMana, mana, x, y, direction, resource.texture_Player_Stopped, resource.texture_Player_Walking, resource.texture_Player_Combat_Attack, resource.texture_Player_Combat_Been_Hit, resource.texture_Player_Combat_Die, resource.texture_Player_Combat_Running, resource.texture_Player_Combat_Stopped, resource.texture_Player_Combat_Walking, resource.texture_Rect_Health_Bar, resource.texture_Rect_Mana_Bar, resource.font, resource.texture_Empty));
+		OPlayers.emplace_back(Online_Player(id, name, dead, running, speed, attackspeed, maxHealth, health, maxMana, mana, x, y, direction, resource.texture_Player_Stopped, resource.texture_Player_Walking, resource.texture_Player_Combat_Attack, resource.texture_Player_Combat_Been_Hit, resource.texture_Player_Combat_Die, resource.texture_Player_Combat_Running, resource.texture_Player_Combat_Stopped, resource.texture_Player_Combat_Walking, resource.texture_Rect_Health_Bar, resource.texture_Rect_Mana_Bar, resource.font, resource.texture_Empty));
 	}
 }
 
@@ -726,13 +724,13 @@ void create_Items(sf::Packet &packet) {
 	items.reserve(sizeof(Item) * (packet.getDataSize() / 32));
 
 	while (packet >> id >> owner >> type >> visible >> equipped >> grabbed >> inInventory >> inventoryPositionX >> inventoryPositionY >> x >> y) {
-		items.emplace_back(new Item(id, owner, type, visible, equipped, grabbed, inInventory, inventoryPositionX, inventoryPositionY, (float)x, (float)y, resource));
+		items.emplace_back(Item(id, owner, type, visible, equipped, grabbed, inInventory, inventoryPositionX, inventoryPositionY, (float)x, (float)y, resource));
 	}
 
 	//Put your items into your inventory
-	for (Item *item : items)
-		if (item->owner == player.id)
-			inventory.itemList.push_back(item);
+	for (Item &item : items)
+		if (item.owner == player.id)
+			inventory.itemList.push_back(&item);
 }
 
 void create_Daemons(sf::Packet &packet){
@@ -758,7 +756,7 @@ void create_Daemons(sf::Packet &packet){
 
 	while (packet >> id >> dead >> running >> speed >> attackSpeed >> maxHealth >> health >> maxMana >> mana >> x >> y >> direction) {
 		attackspeed = (float)attackSpeed / 100;
-		daemons.emplace_back(new Daemon(id, dead, running, speed, attackspeed, maxHealth, health, maxMana, mana, x, y, direction, resource.texture_Daemon_Attack, resource.texture_Daemon_Been_Hit, resource.texture_Daemon_Die, resource.texture_Daemon_Running, resource.texture_Daemon_Spawn, resource.texture_Daemon_Stopped, resource.texture_Daemon_Walking, resource.texture_Rect_Health_Bar, resource.texture_Rect_Mana_Bar, resource.font, resource.texture_Empty));
+		daemons.emplace_back(Daemon(id, dead, running, speed, attackspeed, maxHealth, health, maxMana, mana, x, y, direction, resource.texture_Daemon_Attack, resource.texture_Daemon_Been_Hit, resource.texture_Daemon_Die, resource.texture_Daemon_Running, resource.texture_Daemon_Spawn, resource.texture_Daemon_Stopped, resource.texture_Daemon_Walking, resource.texture_Rect_Health_Bar, resource.texture_Rect_Mana_Bar, resource.font, resource.texture_Empty));
 	}
 }
 
@@ -777,7 +775,7 @@ void create_Safezones(sf::Packet &packet) {
 	safezones.reserve(sizeof(Safezone) * (packet.getDataSize() / 29));
 
 	while (packet >> id >> x >> y >> w >> h >> active) {
-		safezones.emplace_back(new Safezone(id, x, y, w, h, active));
+		safezones.emplace_back(Safezone(id, x, y, w, h, active));
 	}
 }
 
@@ -797,8 +795,11 @@ void create_Regenertors(sf::Packet &packet) {
 	regenerators.reserve(sizeof(Regenerator) * (packet.getDataSize() / 30));
 
 	while (packet >> id >> x >> y >> w >> h >> active >> type) {
-		regenerators.emplace_back(new Regenerator(id, x, y, w, h, active, type));
+		regenerators.emplace_back(Regenerator(id, x, y, w, h, active, type));
 	}
+	globalMutex.lock();
+	ready = true;
+	globalMutex.unlock();
 }
 
 //----------------------------------------------------------------------
@@ -945,11 +946,11 @@ bool Command(std::string command) {
 		std::cout << player.name << " inventory:" << std::endl;
 		std::cout << "--------------------------------------------------" << std::endl;
 
-		for (Item *item : items)
-			if (item->owner == player.id) {
-				std::cout << "ID: " << item->id << std::endl;
-				std::cout << "Type: " << item->type << std::endl;
-				std::cout << "Name: " << item->name << std::endl;
+		for (Item &item : items)
+			if (item.owner == player.id) {
+				std::cout << "ID: " << item.id << std::endl;
+				std::cout << "Type: " << item.type << std::endl;
+				std::cout << "Name: " << item.name << std::endl;
 			}
 
 		std::cout << std::endl;
@@ -1021,23 +1022,11 @@ bool Connect()
 	return 1;
 }
 
-void Clear_Game(void) {
-	for (unsigned int i = 0; i < walls.size(); ++i)
-		delete walls[i];
+void LogOut(sf::Thread *thread_Receive) {
+	if (thread_Receive)
+		thread_Receive->terminate();
 
-	for (unsigned int i = 0; i < items.size(); ++i)
-		delete items[i];
-
-	for (unsigned int i = 0; i < OPlayers.size(); ++i)
-		delete OPlayers[i];
-
-	for (unsigned int i = 0; i < daemons.size(); ++i)
-		delete daemons[i];
-
-	walls.clear();
-	items.clear();
-	OPlayers.clear();
-	daemons.clear();
+	login = false;
 }
 
 void Delete(sf::Thread *thread_Receive) {
@@ -1046,24 +1035,4 @@ void Delete(sf::Thread *thread_Receive) {
 		thread_Receive->terminate();
 		delete thread_Receive;
 	}
-
-	unsigned int i = 0;
-
-	for (i = 0; i < walls.size(); ++i)
-		delete walls[i];
-
-	for (i = 0; i < safezones.size(); ++i)
-		delete safezones[i];
-
-	for (i = 0; i < regenerators.size(); ++i)
-		delete regenerators[i];
-
-	for (i = 0; i < items.size(); ++i)
-		delete items[i];
-
-	for (i = 0; i < OPlayers.size(); ++i)
-		delete OPlayers[i];
-
-	for (i = 0; i < daemons.size(); ++i)
-		delete daemons[i];
 }

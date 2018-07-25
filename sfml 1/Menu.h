@@ -2,7 +2,7 @@
 #include "MenuItem.h"
 #include "Globals.h"
 
-#define ITEMS_COUNT 3
+const unsigned short ITEMS_COUNT = 3;
 
 class Menu
 {
@@ -12,7 +12,7 @@ public:
 	void draw(sf::RenderWindow &) const;
 	void moveUp();
 	void moveDown();
-	bool update(sf::RenderWindow &);
+	sf::Uint8 update(sf::RenderWindow &);
 	void updatePos(sf::Vector2f, float);
 	void setSelectedItem(sf::Uint8);
 

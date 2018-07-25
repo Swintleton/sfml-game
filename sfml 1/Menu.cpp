@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Menu.h"
-#include <iostream>
 
 Menu::Menu(float width, float height, sf::Font &font) : selectedItemIndex(0), visible(false)
 {
@@ -44,7 +43,7 @@ void Menu::moveDown() {
 	}
 }
 
-bool Menu::update(sf::RenderWindow &window)
+sf::Uint8 Menu::update(sf::RenderWindow &window)
 {
 	//SELECTIONS
 	sf::Vector2f MousePos(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
@@ -63,22 +62,17 @@ bool Menu::update(sf::RenderWindow &window)
 	if ((!sf::Mouse::isButtonPressed(sf::Mouse::Left) || !menu[selectedItemIndex].rc.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window)))) && !sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 		return 0;
 
+	switch (selectedItemIndex) {
 	//Continue
-	if (selectedItemIndex == 0) {
+	case 0:
 		visible = false;
 		return 1;
-	}
 	//Options
-	if (selectedItemIndex == 1) {
-		return 1;
-	}
+	case 1:
+		return 2;
 	//Exit
-	if (selectedItemIndex == 2) {
-		globalMutex.lock();
-		quit = true;
-		globalMutex.unlock();
-		window.close();
-		return 1;
+	case 2:
+		return 3;
 	}
 }
 

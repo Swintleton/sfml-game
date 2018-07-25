@@ -5,7 +5,7 @@
 #include "Wall.h"
 #include "CircleBar.h"
 
-#define SQRT_2 std::sqrt(2.f)
+const float SQRT_2 = std::sqrt(2.f);
 
 class Player
 {
@@ -27,7 +27,7 @@ public:
 	Player(float, float);
 	void const draw(sf::RenderWindow &) const;
 
-	bool move(float, std::vector<Wall *> &);
+	bool move(float, std::vector<Wall> &);
 	void attack(float);
 	void beenHit(float);
 	void die(float);

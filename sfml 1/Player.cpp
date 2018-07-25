@@ -19,7 +19,7 @@ Player::Player(float x, float y)
 	attackSpeed = 0.63f;
 }
 
-bool Player::move(float deltaTime, std::vector<Wall *> &walls)
+bool Player::move(float deltaTime, std::vector<Wall> &walls)
 {
 	sf::Vector2f movement(0.f, 0.f);
 //-------------------------DECIDE WALKING DIRECTION--------------------------
@@ -96,8 +96,8 @@ bool Player::move(float deltaTime, std::vector<Wall *> &walls)
 		collisionRect.move(movement);
 		sprite.move(movement);
 
-		for (Wall *other : walls) {
-			if (collisionRect.getGlobalBounds().intersects(other->collisionRect.getGlobalBounds())) {
+		for (Wall &w : walls) {
+			if (collisionRect.getGlobalBounds().intersects(w.collisionRect.getGlobalBounds())) {
 				collisionRect.setPosition(oldPos);
 				sprite.setPosition(oldPos);
 			}
